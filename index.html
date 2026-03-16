@@ -231,9 +231,10 @@ h2 .acc { color:var(--red); }
 .ctf-header {
   background:var(--card); border:1px solid var(--border);
   border-top:3px solid var(--cyan);
-  padding:2rem; border-radius:3px;
-  box-shadow:0 2px 8px rgba(0,122,204,0.06);
+  padding:1.75rem 2rem 0 2rem; border-radius:3px;
+  box-shadow:0 2px 8px rgba(51,204,255,0.06);
   text-align:center; margin-bottom:1.25rem;
+  overflow:hidden;
 }
 .ctf-title { font-family:var(--sans); font-size:1.5rem; font-weight:700; color:var(--cyan); letter-spacing:3px; margin-bottom:.3rem; }
 .ctf-sub { font-size:11px; letter-spacing:2px; color:var(--txt3); margin-bottom:1.25rem; }
@@ -575,11 +576,10 @@ footer {
     <div class="ctf-header">
       <div class="ctf-title">[ 0xE ] GUARDIAN</div>
       <div class="ctf-sub">TRYHACKME · RANK #5565 · TOP 1% GLOBALLY</div>
-      <div style="margin-top:1.5rem;width:100%;display:flex;justify-content:center;align-items:center;overflow:hidden;">
-        <div style="transform:scale(1.6);transform-origin:center center;margin:2.5rem 0;">
+      <div style="margin-top:1.5rem;display:flex;justify-content:center;">
+        <div style="transform:scale(2);transform-origin:top center;margin-bottom:6rem;">
           <iframe src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=2378461"
-            style="border:none;display:block;"
-            loading="lazy" title="TryHackMe Badge"></iframe>
+            style="border:none;display:block;" loading="lazy" title="TryHackMe Badge"></iframe>
         </div>
       </div>
     </div>
