@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sree Danush S — Offensive Security Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red:      #ff2244;
+  --red2:     #ff4466;
+  --red-lt:   #ff6680;
+  --red-bg:   rgba(255,34,68,0.1);
+  --red-bg2:  rgba(255,34,68,0.18);
+  --red-bd:   rgba(255,34,68,0.28);
+  --red-bdh:  rgba(255,34,68,0.6);
+  --amber:    #ffaa33;
+  --cyan:     #33ccff;
+  --bg:       #1a0008;
+  --bg2:      #200010;
+  --bg3:      #2a0018;
+  --card:     #1e000d;
+  --txt:      #ffe8ee;
+  --txt2:     #d49aaa;
+  --txt3:     #8a5060;
+  --border:   rgba(255,34,68,0.2);
+  --mono:     'Share Tech Mono', monospace;
+  --sans:     'Rajdhani', sans-serif;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--txt);
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* canvas sits behind everything */
+#node-canvas {
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+}
+
+/* ── NAV ── */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  height:58px;
+  background: rgba(20,0,10,0.96);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 0 clamp(1rem,4vw,3rem);
+  box-shadow: 0 1px 12px rgba(232,0,45,0.06);
+}
+.logo {
+  font-family:var(--sans); font-size:1.3rem; font-weight:700;
+  color:var(--red); letter-spacing:3px; text-decoration:none;
+}
+.logo em { color:var(--txt3); font-style:normal; }
+.nav-links { display:flex; gap:1.5rem; list-style:none; }
+.nav-links a {
+  font-size:11px; letter-spacing:1px; color:var(--txt2);
+  text-decoration:none; transition:color .2s;
+}
+.nav-links a:hover { color:var(--red); }
+.avail { display:flex; align-items:center; gap:7px; font-size:11px; color:var(--txt2); }
+.dot { width:7px; height:7px; border-radius:50%; background:var(--red); animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.25} }
+
+/* ── SECTION BASE ── */
+section {
+  position:relative; z-index:1;
+  padding: clamp(4rem,8vw,6rem) clamp(1rem,4vw,3rem);
+  max-width:1080px; margin:0 auto;
+}
+.label {
+  font-size:10px; letter-spacing:4px; text-transform:uppercase;
+  color:var(--red); margin-bottom:.35rem;
+}
+h2 {
+  font-family:var(--sans); font-weight:700;
+  font-size:clamp(1.8rem,4vw,2.5rem);
+  color:var(--txt); letter-spacing:1px;
+  margin-bottom:2.5rem; line-height:1.1;
+}
+h2 .acc { color:var(--red); }
+.divider { border:none; border-top:1px solid var(--border); }
+
+/* ── HERO ── */
+#hero {
+  min-height:100vh; display:flex; flex-direction:column;
+  justify-content:center; padding-top:58px;
+}
+.hero-eye {
+  font-size:11px; letter-spacing:4px; color:var(--red);
+  margin-bottom:1.2rem; text-transform:uppercase;
+}
+.hero-name {
+  font-family:var(--sans); font-weight:700;
+  font-size:clamp(2.8rem,8vw,5.5rem);
+  color:var(--txt); line-height:1; letter-spacing:3px;
+  margin-bottom:.4rem;
+}
+.hero-handle {
+  font-size:clamp(1rem,2.5vw,1.6rem);
+  color:var(--red); letter-spacing:5px;
+  margin-bottom:1.8rem;
+}
+.hero-bio {
+  font-size:15px; line-height:1.9; color:var(--txt2);
+  max-width:620px; margin-bottom:2rem;
+  padding-left:1.1rem;
+  border-left:3px solid var(--red);
+}
+.hero-bio strong { color:var(--txt); font-weight:normal; }
+
+.chips { display:flex; flex-wrap:wrap; gap:.5rem; margin-bottom:2.2rem; }
+.chip {
+  padding:5px 14px; font-size:11px; letter-spacing:.5px;
+  border:1px solid var(--red-bd); color:var(--red);
+  background:var(--red-bg); border-radius:2px; transition:all .2s;
+}
+.chip:hover { border-color:var(--red); background:var(--red-bg2); }
+.chip.a { border-color:rgba(217,119,0,.25); color:var(--amber); background:rgba(217,119,0,.06); }
+.chip.c { border-color:rgba(0,122,204,.2);  color:var(--cyan);  background:rgba(0,122,204,.05); }
+
+.btns { display:flex; gap:.8rem; flex-wrap:wrap; }
+.btn {
+  padding:11px 26px; font-family:var(--mono); font-size:12px;
+  letter-spacing:2px; text-decoration:none; text-transform:uppercase;
+  border:1px solid var(--red); color:var(--red);
+  background:transparent; cursor:pointer; border-radius:2px; transition:all .2s;
+}
+.btn:hover { background:var(--red-bg); }
+.btn.fill { background:var(--red); color:#fff; font-weight:bold; }
+.btn.fill:hover { background:#c00025; border-color:#c00025; }
+
+.console {
+  margin-top:3rem; font-size:12px; color:var(--txt3);
+  opacity:.7; letter-spacing:.5px;
+}
+.console .ps { color:var(--red); }
+
+/* ── STATS ROW ── */
+.stats-row {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+  gap:1px; border:1px solid var(--border); background:var(--border);
+  overflow:hidden; border-radius:3px; margin-bottom:2.5rem;
+}
+.stat-cell {
+  background:var(--card); padding:1.4rem 1rem; text-align:center;
+  transition:background .2s;
+}
+.stat-cell:hover { background:var(--bg2); }
+.stat-num {
+  font-family:var(--sans); font-size:2rem; font-weight:700;
+  color:var(--red); line-height:1; display:block;
+}
+.stat-lbl { font-size:10px; letter-spacing:2px; color:var(--txt3); margin-top:4px; }
+
+/* ── ABOUT ── */
+.about-body { font-size:15px; line-height:1.9; color:var(--txt2); max-width:720px; }
+.about-body p { margin-bottom:1.1rem; }
+.hl  { color:var(--red); font-style:normal; }
+.hlw { color:var(--txt); }
+.hla { color:var(--amber); }
+.hlc { color:var(--cyan); }
+
+/* ── PROJECTS ── */
+.proj-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:1.25rem; }
+.proj-card {
+  background:var(--card); border:1px solid var(--border);
+  border-top:3px solid var(--red);
+  padding:1.75rem; border-radius:3px;
+  box-shadow: 0 2px 8px rgba(232,0,45,0.06);
+  transition:box-shadow .2s, border-color .2s;
+}
+.proj-card.a { border-top-color:var(--amber); }
+.proj-card.c { border-top-color:var(--cyan);  }
+.proj-card.g { border-top-color:#888; }
+.proj-card:hover { box-shadow:0 4px 18px rgba(232,0,45,0.12); border-color:var(--red-bd); }
+
+.proj-head { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:.6rem; }
+.proj-name { font-family:var(--sans); font-size:1.15rem; font-weight:700; color:var(--txt); }
+.badge {
+  font-size:9px; padding:2px 8px; letter-spacing:1px;
+  border:1px solid var(--border); color:var(--txt3); border-radius:2px; white-space:nowrap;
+}
+.badge.live { border-color:var(--red-bd); color:var(--red); background:var(--red-bg); }
+.badge.prod { border-color:rgba(217,119,0,.3); color:var(--amber); background:rgba(217,119,0,.06); }
+
+.proj-desc { font-size:13px; color:var(--txt2); line-height:1.75; margin-bottom:1rem; }
+.tech-row { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:1rem; }
+.tch {
+  font-size:10px; padding:2px 9px;
+  background:var(--red-bg); border:1px solid var(--red-bd);
+  color:var(--red); border-radius:2px;
+}
+.proj-link {
+  font-size:11px; color:var(--txt3); text-decoration:none;
+  letter-spacing:1px; border-bottom:1px dotted var(--border);
+  transition:color .2s, border-color .2s;
+}
+.proj-link:hover { color:var(--red); border-color:var(--red); }
+
+/* ── SKILLS ── */
+.skills-wrap { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1rem; }
+.skill-box {
+  background:var(--card); border:1px solid var(--border); padding:1.4rem; border-radius:3px;
+  box-shadow:0 1px 4px rgba(0,0,0,0.04);
+  transition:box-shadow .2s;
+}
+.skill-box:hover { box-shadow:0 3px 12px rgba(232,0,45,0.08); }
+.skill-ttl {
+  font-size:10px; letter-spacing:3px; text-transform:uppercase;
+  color:var(--red); margin-bottom:.9rem;
+  padding-bottom:.6rem; border-bottom:1px solid var(--border);
+}
+.skill-tags { display:flex; flex-wrap:wrap; gap:5px; }
+.sk {
+  font-size:11px; padding:3px 10px;
+  border:1px solid var(--border); color:var(--txt2); border-radius:2px;
+  background:var(--bg);
+}
+
+/* ── CTF / LABS ── */
+.ctf-header {
+  background:var(--card); border:1px solid var(--border);
+  border-top:3px solid var(--cyan);
+  padding:2rem; border-radius:3px;
+  box-shadow:0 2px 8px rgba(0,122,204,0.06);
+  text-align:center; margin-bottom:1.25rem;
+}
+.ctf-title { font-family:var(--sans); font-size:1.5rem; font-weight:700; color:var(--cyan); letter-spacing:3px; margin-bottom:.3rem; }
+.ctf-sub { font-size:11px; letter-spacing:2px; color:var(--txt3); margin-bottom:1.25rem; }
+.thm-badge-note {
+  font-size:12px; color:var(--txt3);
+  border:1px dashed var(--border); padding:.6rem 1.2rem;
+  border-radius:2px; background:var(--bg2); display:inline-block;
+}
+
+.ctf-stats {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+  gap:1px; border:1px solid var(--border); background:var(--border);
+  overflow:hidden; border-radius:3px; margin-bottom:1.25rem;
+}
+.ctf-cell { background:var(--card); padding:1.3rem 1rem; text-align:center; transition:background .2s; }
+.ctf-cell:hover { background:var(--bg2); }
+.ctf-n { font-family:var(--sans); font-size:1.9rem; font-weight:700; color:var(--red); display:block; }
+.ctf-l { font-size:10px; letter-spacing:2px; color:var(--txt3); margin-top:3px; }
+
+.lab-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1rem; }
+.lab-card {
+  background:var(--card); border:1px solid var(--border); padding:1.25rem;
+  border-radius:3px; box-shadow:0 1px 4px rgba(0,0,0,0.04);
+}
+.lab-name { font-family:var(--sans); font-size:1rem; font-weight:700; color:var(--txt); margin-bottom:.4rem; }
+.lab-desc { font-size:12px; color:var(--txt2); line-height:1.7; }
+.lab-tags { display:flex; flex-wrap:wrap; gap:4px; margin-top:.6rem; }
+.lt { font-size:10px; padding:2px 7px; border:1px solid var(--border); color:var(--txt3); border-radius:2px; }
+
+/* ── TIMELINE ── */
+.tl { position:relative; padding-left:2rem; }
+.tl::before { content:''; position:absolute; left:0; top:4px; bottom:0; width:1px; background:linear-gradient(to bottom, var(--red), transparent 90%); }
+.tl-item { position:relative; margin-bottom:2.4rem; }
+.tl-item::before {
+  content:''; position:absolute; left:-2rem; top:5px;
+  width:7px; height:7px; border:1px solid var(--red);
+  background:var(--bg); transform:rotate(45deg); transition:background .2s;
+}
+.tl-item:hover::before { background:var(--red); }
+.tl-date { font-size:10px; letter-spacing:2px; color:var(--txt3); margin-bottom:3px; }
+.tl-org  { font-family:var(--sans); font-size:1.1rem; font-weight:700; color:var(--txt); margin-bottom:2px; }
+.tl-role { font-size:12px; color:var(--red); letter-spacing:.5px; margin-bottom:.6rem; }
+.tl-pts  { font-size:13px; color:var(--txt2); line-height:1.85; }
+.tl-pts li { list-style:none; margin-bottom:4px; padding-left:1rem; }
+.tl-pts li::before { content:'› '; color:var(--red); }
+
+/* ── CERTS + EDU ── */
+.edu-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1rem; margin-bottom:2rem; }
+.edu-card {
+  background:var(--card); border:1px solid var(--border); padding:1.5rem;
+  border-radius:3px; box-shadow:0 1px 4px rgba(0,0,0,0.04);
+}
+.edu-inst { font-family:var(--sans); font-size:1.05rem; font-weight:700; color:var(--txt); margin-bottom:3px; }
+.edu-deg  { font-size:12px; color:var(--red); margin-bottom:5px; }
+.edu-meta { font-size:11px; color:var(--txt3); }
+.edu-score { font-family:var(--sans); font-size:1.9rem; font-weight:700; color:var(--red); margin-top:.5rem; line-height:1; }
+.edu-score span { font-size:.8rem; color:var(--txt3); font-family:var(--mono); }
+
+.certs-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:.9rem; }
+.cert-card {
+  background:var(--card); border:1px solid var(--border);
+  padding:1rem 1.2rem; display:flex; align-items:center; gap:.9rem;
+  border-radius:3px; transition:box-shadow .2s;
+}
+.cert-card:hover { box-shadow:0 2px 10px rgba(232,0,45,0.08); }
+.cert-ico { font-family:var(--sans); font-size:1rem; font-weight:700; color:var(--amber); min-width:28px; }
+.cert-nm  { font-size:12px; color:var(--txt); line-height:1.4; }
+.cert-by  { font-size:10px; color:var(--txt3); letter-spacing:.5px; margin-top:2px; }
+
+/* ── BLOG ── */
+.blog-stack { display:flex; flex-direction:column; gap:.8rem; }
+.blog-card {
+  background:var(--card); border:1px solid var(--border);
+  padding:1.1rem 1.4rem; display:flex; align-items:center;
+  justify-content:space-between; gap:1rem;
+  text-decoration:none; border-radius:3px;
+  box-shadow:0 1px 4px rgba(0,0,0,0.04);
+  transition:box-shadow .2s, border-color .2s;
+}
+.blog-card:hover { box-shadow:0 3px 12px rgba(232,0,45,0.1); border-color:var(--red-bd); }
+.blog-t { font-size:14px; color:var(--txt); margin-bottom:5px; }
+.bchips { display:flex; gap:5px; flex-wrap:wrap; }
+.bchip { font-size:10px; padding:1px 7px; border:1px solid var(--border); color:var(--txt3); border-radius:2px; }
+.arr { color:var(--txt3); transition:transform .2s, color .2s; }
+.blog-card:hover .arr { transform:translateX(4px); color:var(--red); }
+
+/* ── CONTACT ── */
+.contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:start; }
+.contact-note { font-size:15px; color:var(--txt2); line-height:1.9; }
+.contact-note p { margin-bottom:1rem; }
+.contact-note strong { color:var(--txt); font-weight:normal; }
+.contact-links { display:flex; flex-direction:column; gap:.8rem; }
+.cl {
+  background:var(--card); border:1px solid var(--border);
+  padding:.9rem 1.2rem; display:flex; align-items:center; gap:.8rem;
+  text-decoration:none; border-radius:3px;
+  box-shadow:0 1px 4px rgba(0,0,0,0.04);
+  transition:box-shadow .2s, border-color .2s;
+}
+.cl:hover { box-shadow:0 3px 12px rgba(232,0,45,0.1); border-color:var(--red-bd); }
+.cl-lbl { font-size:9px; letter-spacing:2px; color:var(--txt3); margin-bottom:2px; }
+.cl-val { font-size:13px; color:var(--red); }
+
+/* ── FOOTER ── */
+footer {
+  position:relative; z-index:1;
+  border-top:1px solid var(--border);
+  padding:2rem clamp(1rem,4vw,3rem);
+  display:flex; justify-content:space-between; align-items:center;
+  flex-wrap:wrap; gap:1rem;
+  background:var(--bg2); { font-family:var(--sans); font-size:1rem; font-weight:700; color:var(--red); letter-spacing:2px; }
+.footer-note { font-size:11px; color:var(--txt3); }
+
+/* ── FADE ── */
+.fi { opacity:0; transform:translateY(14px); transition:opacity .5s ease, transform .5s ease; }
+.fi.in { opacity:1; transform:translateY(0); }
+
+/* ── RESPONSIVE ── */
+@media(max-width:700px) {
+  .nav-links { display:none; }
+  .contact-grid { grid-template-columns:1fr; }
+  footer { flex-direction:column; text-align:center; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="node-canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="logo">L4ZZ3R<em>J0D</em></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#labs">Labs</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#blog">Blog</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="avail"><div class="dot"></div>Open to opportunities</div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section id="hero">
+  <div class="hero-eye">Offensive Security Engineer &amp; Tool Builder</div>
+  <div class="hero-name">SREE DANUSH S</div>
+  <div class="hero-handle">[ L4ZZ3RJ0D ]</div>
+  <p class="hero-bio">
+    Final-year BE Cybersecurity student currently interning at <strong>CyArt</strong>,
+    building <strong>CyTrack</strong> — a multi-agent autonomous web pentesting platform
+    running in production. I research how web applications break, build tools that automate that process,
+    and document everything I learn.
+  </p>
+  <div class="chips">
+    <span class="chip">Offensive Security Research</span>
+    <span class="chip">Automated Penetration Testing</span>
+    <span class="chip">Security Tool Development</span>
+    <span class="chip a">Web Application Security</span>
+    <span class="chip c">AI / LLM Security Testing</span>
+    <span class="chip a">CTF · TryHackMe Top 1%</span>
+  </div>
+  <div class="btns">
+    <a href="#projects" class="btn fill">View Projects</a>
+    <a href="#contact" class="btn">Contact Me</a>
+    <a href="https://github.com/l4zz3rj0d" target="_blank" class="btn">GitHub</a>
+  </div>
+  <div class="console">
+    <span class="ps">lazzer@kali</span>:~$ python3 hellhound.py --target https://target.com --mode autonomous
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══ ABOUT ═══ -->
+<section id="about">
+  <div class="label">// About</div>
+  <h2>Who I <span class="acc">Am</span></h2>
+
+  <div class="stats-row fi">
+    <div class="stat-cell"><span class="stat-num">8.31</span><div class="stat-lbl">CGPA</div></div>
+    <div class="stat-cell"><span class="stat-num">5</span><div class="stat-lbl">Internships</div></div>
+    <div class="stat-cell"><span class="stat-num">22+</span><div class="stat-lbl">GitHub Repos</div></div>
+    <div class="stat-cell"><span class="stat-num">#5565</span><div class="stat-lbl">THM Rank</div></div>
+    <div class="stat-cell"><span class="stat-num">Top 1%</span><div class="stat-lbl">TryHackMe</div></div>
+  </div>
+
+  <div class="about-body fi">
+    <p>
+      I'm <span class="hlw">Sree Danush S</span> — an offensive security engineer from Tamil Nadu,
+      studying Cybersecurity at Mahendra Engineering College.
+      My work lives at the intersection of <span class="hl">web security research, automation, and tool building</span>.
+    </p>
+    <p>
+      At <span class="hl">CyArt</span>, I contribute to <span class="hlw">CyTrack</span> — a multi-agent
+      autonomous web pentesting platform. Multiple agent layers, each targeting a different attack class,
+      run in production against real targets. This is production-grade offensive security engineering, not a side project.
+    </p>
+    <p>
+      In parallel, I maintain <span class="hla">Hellhound</span> — my personal modular pentest framework —
+      and consistently practise through <span class="hlc">PortSwigger Web Security Academy</span>,
+      where I'm currently exploring areas like Web LLM attacks, advanced injection techniques,
+      and newer web attack vectors. I believe the best security engineers never stop practising their craft.
+    </p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══ PROJECTS ═══ -->
+<section id="projects">
+  <div class="label">// Projects</div>
+  <h2>What I've <span class="acc">Built</span></h2>
+
+  <div class="proj-grid fi">
+
+    <div class="proj-card">
+      <div class="proj-head">
+        <div class="proj-name">Hellhound Framework</div>
+        <span class="badge live">ACTIVE</span>
+      </div>
+      <p class="proj-desc">
+        Personal modular autonomous pentesting framework. Features an adaptive multi-tier attack pipeline,
+        SPA-aware crawling, advanced parameter and endpoint discovery, OS fingerprinting, and
+        proof-of-exploitation generation. Built to grow continuously as I learn new attack surfaces.
+      </p>
+      <div class="tech-row"><span class="tch">Python</span><span class="tch">Autonomous</span><span class="tch">Multi-tier</span><span class="tch">OOB Server</span><span class="tch">Spider v11+</span></div>
+      <a href="https://github.com/l4zz3rj0d/Hellhound-Pentest" target="_blank" class="proj-link">→ github.com/l4zz3rj0d/Hellhound-Pentest</a>
+    </div>
+
+    <div class="proj-card a">
+      <div class="proj-head">
+        <div class="proj-name">CyTrack — Multi-Agent Pentest Platform</div>
+        <span class="badge prod">PRODUCTION</span>
+      </div>
+      <p class="proj-desc">
+        Multi-agent autonomous web pentesting platform built at CyArt. Each agent is purpose-built to target a specific class of web vulnerabilities — I contribute across multiple agent layers that are rule-based, adaptive, and running in production on real targets. Internal project — no public repo.
+      </p>
+      <div class="tech-row"><span class="tch">Python</span><span class="tch">Multi-Agent</span><span class="tch">Autonomous</span><span class="tch">Production</span></div>
+    </div>
+
+    <div class="proj-card g">
+      <div class="proj-head">
+        <div class="proj-name">OSINT Automation Tool</div>
+        <span class="badge">OPEN SOURCE</span>
+      </div>
+      <p class="proj-desc">
+        Terminal-based tool that automates intelligence gathering from multiple academic and open-source
+        platforms. Enables rapid recon without relying on manual web browsing.
+      </p>
+      <div class="tech-row"><span class="tch">Python</span><span class="tch">OSINT</span><span class="tch">Automation</span><span class="tch">Recon</span></div>
+      <a href="https://github.com/l4zz3rj0d" target="_blank" class="proj-link">→ github.com/l4zz3rj0d</a>
+    </div>
+
+    <div class="proj-card c">
+      <div class="proj-head">
+        <div class="proj-name">Pi Pico Rubber Ducky</div>
+        <span class="badge">HARDWARE</span>
+      </div>
+      <p class="proj-desc">
+        Functional HID keystroke injection device built on Raspberry Pi Pico. Automated payload delivery
+        for penetration testing scenarios. Built and deployed during internship at
+        Pondicherry Cyber Crime Department.
+      </p>
+      <div class="tech-row"><span class="tch">Pi Pico</span><span class="tch">HID Attack</span><span class="tch">Payload Delivery</span></div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══ SKILLS ═══ -->
+<section id="skills">
+  <div class="label">// Skills</div>
+  <h2>Technical <span class="acc">Focus</span></h2>
+
+  <div class="skills-wrap fi">
+
+    <div class="skill-box">
+      <div class="skill-ttl">Penetration Testing Tools</div>
+      <div class="skill-tags">
+        <span class="sk">Burp Suite</span>
+        <span class="sk">Nmap</span>
+        <span class="sk">Metasploit</span>
+        <span class="sk">SQLMap</span>
+        <span class="sk">Hydra</span>
+        <span class="sk">Custom Python Tools</span>
+        <span class="sk">Hellhound Framework</span>
+      </div>
+    </div>
+
+    <div class="skill-box">
+      <div class="skill-ttl">Web Security Areas</div>
+      <div class="skill-tags">
+        <span class="sk">Injection Vulnerabilities</span>
+        <span class="sk">Broken Authentication</span>
+        <span class="sk">Access Control Flaws</span>
+        <span class="sk">Web LLM Attacks</span>
+        <span class="sk">API Security</span>
+        <span class="sk">Linux Privilege Escalation</span>
+      </div>
+    </div>
+
+    <div class="skill-box">
+      <div class="skill-ttl">Hardware &amp; Wireless</div>
+      <div class="skill-tags">
+        <span class="sk">ESP32 / ESP8266</span>
+        <span class="sk">Raspberry Pi Pico</span>
+        <span class="sk">Deauth Attacks (studied)</span>
+        <span class="sk">Evil Twin AP (studied)</span>
+        <span class="sk">Keystroke Injection</span>
+      </div>
+    </div>
+
+    <div class="skill-box">
+      <div class="skill-ttl">Platforms &amp; Labs</div>
+      <div class="skill-tags">
+        <span class="sk">Kali Linux</span>
+        <span class="sk">TryHackMe</span>
+        <span class="sk">PortSwigger Academy</span>
+        <span class="sk">Android Pentesting (DIVA)</span>
+        <span class="sk">Bugcrowd</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══ LABS / CTF ═══ -->
+<section id="labs">
+  <div class="label">// Labs &amp; Continuous Learning</div>
+  <h2>Proof of <span class="acc">Practice</span></h2>
+
+  <div class="fi">
+    <div class="ctf-header">
+      <div class="ctf-title">[ 0xE ] GUARDIAN</div>
+      <div class="ctf-sub">TRYHACKME · RANK #5565 · TOP 1% GLOBALLY</div>
+      <a href="https://tryhackme.com/p/L4ZZ3RJ0D" target="_blank" style="display:inline-flex;align-items:center;gap:.5rem;margin-top:.75rem;padding:.5rem 1.2rem;border:1px solid rgba(51,204,255,.3);color:var(--cyan);font-size:12px;text-decoration:none;border-radius:2px;background:rgba(51,204,255,.05);letter-spacing:1px;transition:all .2s;" onmouseover="this.style.background='rgba(51,204,255,.12)'" onmouseout="this.style.background='rgba(51,204,255,.05)'">
+        View Live Profile → tryhackme.com/p/L4ZZ3RJ0D
+      </a>
+    </div>
+
+    <div class="ctf-stats">
+      <div class="ctf-cell"><span class="ctf-n">350+</span><div class="ctf-l">Rooms Done</div></div>
+      <div class="ctf-cell"><span class="ctf-n">38</span><div class="ctf-l">Badges</div></div>
+      <div class="ctf-cell"><span class="ctf-n">250+</span><div class="ctf-l">Day Streak</div></div>
+      <div class="ctf-cell"><span class="ctf-n">Top 1%</span><div class="ctf-l">Global</div></div>
+    </div>
+
+    <div class="lab-cards">
+
+      <div class="lab-card">
+        <div class="lab-name">Hack The Box</div>
+        <div class="lab-desc">Recently started exploring HTB machines and challenges. Early stage but actively working through beginner-level boxes to build hands-on exploitation skills.</div>
+        <div class="lab-tags">
+          <span class="lt">Getting Started</span>
+          <span class="lt">Active</span>
+        </div>
+      </div>
+
+      <div class="lab-card">
+        <div class="lab-name">TryHackMe Learning Paths</div>
+        <div class="lab-desc">Completed two full certification paths — building foundational to intermediate offensive security skills across real labs.</div>
+        <div class="lab-tags">
+          <span class="lt">Jr. Penetration Tester</span>
+          <span class="lt">Web App Pentesting</span>
+          <span class="lt">Linux PrivEsc</span>
+        </div>
+      </div>
+
+      <div class="lab-card">
+        <div class="lab-name">PortSwigger Web Security Academy</div>
+        <div class="lab-desc">Consistent practice across the full OWASP attack surface. Currently exploring newer areas including Web LLM attacks.</div>
+        <div class="lab-tags">
+          <span class="lt">SQLi</span><span class="lt">Auth Bypass</span>
+          <span class="lt">2FA Bypass</span><span class="lt">XXE</span>
+          <span class="lt">SSTI</span><span class="lt">Web LLM Attacks</span>
+          <span class="lt">Access Control</span><span class="lt">IDOR</span>
+        </div>
+      </div>
+
+      <div class="lab-card">
+        <div class="lab-name">AI &amp; LLM Security — Emerging Focus</div>
+        <div class="lab-desc">Actively learning how AI-integrated applications introduce new attack surfaces — prompt injection, LLM-assisted recon, and AI-driven vulnerability detection.</div>
+        <div class="lab-tags">
+          <span class="lt">Prompt Injection</span>
+          <span class="lt">Web LLM Attacks</span>
+          <span class="lt">AI-Assisted Pentesting</span>
+        </div>
+      </div>
+
+      <div class="lab-card">
+        <div class="lab-name">Bug Bounty — Getting Started</div>
+        <div class="lab-desc">Bugcrowd account created. Currently building the consistency and lab depth needed before taking on real targets responsibly.</div>
+        <div class="lab-tags">
+          <span class="lt">Bugcrowd</span>
+          <span class="lt">In Progress</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══ EXPERIENCE ═══ -->
+<section id="experience">
+  <div class="label">// Experience</div>
+  <h2>Where I've <span class="acc">Worked</span></h2>
+
+  <div class="tl fi">
+
+    <div class="tl-item">
+      <div class="tl-date">DEC 2025 — PRESENT · REMOTE</div>
+      <div class="tl-org">CyArt</div>
+      <div class="tl-role">VAPT Intern — CyTrack Platform</div>
+      <ul class="tl-pts">
+        <li>Contributing across multiple agent layers in CyTrack — a multi-agent autonomous web pentesting platform</li>
+        <li>Building production-grade Python agents, each targeting a different class of web vulnerabilities</li>
+        <li>Modules running in production and actively tested on real targets</li>
+      </ul>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-date">SEP 2025 — NOV 2025 · REMOTE</div>
+      <div class="tl-org">Cyber Secured India</div>
+      <div class="tl-role">Hardware Hacking Intern</div>
+      <ul class="tl-pts">
+        <li>Learned about deauthentication attacks and Evil Twin AP setups using ESP32 and ESP8266</li>
+        <li>Studied IoT device attack surfaces and wireless network vulnerability concepts</li>
+        <li>Gained foundational understanding of hardware-based attack methodologies</li>
+      </ul>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-date">APR 2025 — JUN 2025 · REMOTE</div>
+      <div class="tl-org">Cyber Secured India</div>
+      <div class="tl-role">Cybersecurity &amp; Digital Forensic Intern</div>
+      <ul class="tl-pts">
+        <li>Learned web application security and digital forensics concepts through structured training</li>
+        <li>Completed 10+ PortSwigger Web Security Academy labs covering SQLi, Broken Auth, 2FA bypass, and enumeration</li>
+        <li>Exploited a VulnHub machine — Pluck CMS 4.7.16 RCE — and published a full technical writeup on Medium</li>
+        <li>Studied Android application security using DIVA</li>
+      </ul>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-date">JAN 2025 · PONDICHERRY</div>
+      <div class="tl-org">Pondicherry Cyber Crime Department</div>
+      <div class="tl-role">Cybersecurity Intern</div>
+      <ul class="tl-pts">
+        <li>Gained hands-on understanding of how cybercrime investigations are conducted in a real government department</li>
+        <li>Observed digital evidence handling, case analysis workflows, and law enforcement cybersecurity protocols</li>
+        <li>Built a Raspberry Pi Pico Rubber Ducky — a functional HID keystroke injection device for penetration testing research</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══ EDUCATION + CERTS ═══ -->
+<section id="certs">
+  <div class="label">// Education &amp; Certifications</div>
+  <h2>Credentials &amp; <span class="acc">Training</span></h2>
+
+  <div class="edu-row fi">
+    <div class="edu-card">
+      <div class="edu-inst">Mahendra Engineering College</div>
+      <div class="edu-deg">BE — Cyber Security</div>
+      <div class="edu-meta">2022 – Present · Namakkal</div>
+      <div class="edu-score">8.31 <span>/ 10 CGPA</span></div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-inst">SVN Matric Higher Secondary School</div>
+      <div class="edu-deg">HSC — Computer Science</div>
+      <div class="edu-meta">2021 – 2022 · Erode</div>
+      <div class="edu-score">88.7% <span>score</span></div>
+    </div>
+  </div>
+
+  <div class="certs-grid fi">
+    <div class="cert-card"><div class="cert-ico">EC</div><div><div class="cert-nm">Ethical Hacking Essentials</div><div class="cert-by">EC-COUNCIL</div></div></div>
+    <div class="cert-card"><div class="cert-ico">EC</div><div><div class="cert-nm">Network Defence Essentials</div><div class="cert-by">EC-COUNCIL</div></div></div>
+    <div class="cert-card"><div class="cert-ico">EC</div><div><div class="cert-nm">Digital Forensic Essentials</div><div class="cert-by">EC-COUNCIL</div></div></div>
+    <div class="cert-card"><div class="cert-ico">CS</div><div><div class="cert-nm">Cisco Ethical Hacker</div><div class="cert-by">CISCO</div></div></div>
+    <div class="cert-card"><div class="cert-ico">RT</div><div><div class="cert-nm">CCEP</div><div class="cert-by">RED TEAM LEADERS</div></div></div>
+    <div class="cert-card"><div class="cert-ico">IS</div><div><div class="cert-nm">Hands-on Pentesting with Metasploit</div><div class="cert-by">INFOSYS SPRINGBOARD</div></div></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══ BLOG ═══ -->
+<section id="blog">
+  <div class="label">// Writing</div>
+  <h2>Writeups &amp; <span class="acc">Research</span></h2>
+
+  <div class="blog-stack fi">
+    <a href="https://medium.com/@l4zz3rj0d" target="_blank" class="blog-card">
+      <div>
+        <div class="blog-t">Pluck CMS 4.7.16 — Remote Code Execution Exploit</div>
+        <div class="bchips"><span class="bchip">RCE</span><span class="bchip">CMS</span><span class="bchip">Exploit Research</span></div>
+      </div>
+      <span class="arr">→</span>
+    </a>
+    <a href="https://medium.com/@l4zz3rj0d" target="_blank" class="blog-card">
+      <div>
+        <div class="blog-t">Mustacchio — TryHackMe XXE Walkthrough</div>
+        <div class="bchips"><span class="bchip">XXE</span><span class="bchip">TryHackMe</span><span class="bchip">Walkthrough</span></div>
+      </div>
+      <span class="arr">→</span>
+    </a>
+    <a href="https://medium.com/@l4zz3rj0d" target="_blank" class="blog-card">
+      <div>
+        <div class="blog-t">PicoCTF SSTI1 — Server-Side Template Injection</div>
+        <div class="bchips"><span class="bchip">SSTI</span><span class="bchip">CTF</span><span class="bchip">PicoCTF</span></div>
+      </div>
+      <span class="arr">→</span>
+    </a>
+    <a href="https://medium.com/@l4zz3rj0d" target="_blank" class="blog-card">
+      <div>
+        <div class="blog-t">All writeups on Medium → @l4zz3rj0d</div>
+        <div class="bchips"><span class="bchip">View All</span></div>
+      </div>
+      <span class="arr">→</span>
+    </a>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══ CONTACT ═══ -->
+<section id="contact">
+  <div class="label">// Contact</div>
+  <h2>Let's <span class="acc">Talk</span></h2>
+
+  <div class="contact-grid fi">
+    <div class="contact-note">
+      <p>I'm open to <strong>offensive security roles</strong>, research internships, and collaborations on security tooling.</p>
+      <p>Recruiter, researcher, or fellow hacker — reach out. I respond fast.</p>
+      <p style="color:var(--red);font-size:12px;margin-top:1rem;">Preferred: Email · GitHub · LinkedIn</p>
+    </div>
+    <div class="contact-links">
+      <a href="mailto:ssreedanush@gmail.com" class="cl"><div><div class="cl-lbl">EMAIL</div><div class="cl-val">ssreedanush@gmail.com</div></div></a>
+      <a href="https://github.com/l4zz3rj0d" target="_blank" class="cl"><div><div class="cl-lbl">GITHUB</div><div class="cl-val">github.com/l4zz3rj0d</div></div></a>
+      <a href="https://medium.com/@l4zz3rj0d" target="_blank" class="cl"><div><div class="cl-lbl">MEDIUM</div><div class="cl-val">@l4zz3rj0d</div></div></a>
+      <a href="https://tryhackme.com/p/L4ZZ3RJ0D" target="_blank" class="cl"><div><div class="cl-lbl">TRYHACKME</div><div class="cl-val">L4ZZ3RJ0D — Rank #5565</div></div></a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-brand">L4ZZ3RJ0D</span>
+  <span class="footer-note">Sree Danush S · Offensive Security Engineer · Continuously learning. Continuously building.</span>
+</footer>
+
+<script>
+  // ── FADE IN ──
+  const io = new IntersectionObserver(
+    entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); }),
+    { threshold: 0.07 }
+  );
+  document.querySelectorAll('.fi').forEach(el => io.observe(el));
+
+  // ── NODE NETWORK CANVAS ──
+  const canvas = document.getElementById('node-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, nodes, mouse = {x: -999, y: -999};
+  const COUNT = 70, CONNECT_DIST = 150, MOUSE_DIST = 200;
+  const RED = 'rgba(255,34,68,';
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function makeNodes() {
+    nodes = Array.from({length: COUNT}, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: (Math.random() - .5) * .4,
+      vy: (Math.random() - .5) * .4,
+      r: Math.random() * 2 + 1.2
+    }));
+  }
+
+  window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+  window.addEventListener('touchmove', e => {
+    mouse.x = e.touches[0].clientX;
+    mouse.y = e.touches[0].clientY;
+  }, {passive:true});
+  window.addEventListener('resize', () => { resize(); makeNodes(); });
+
+  function dist(a, b) {
+    const dx = a.x - b.x, dy = a.y - b.y;
+    return Math.sqrt(dx*dx + dy*dy);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // move
+    nodes.forEach(n => {
+      n.x += n.vx; n.y += n.vy;
+      if (n.x < 0 || n.x > W) n.vx *= -1;
+      if (n.y < 0 || n.y > H) n.vy *= -1;
+    });
+
+    // lines between nodes
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i+1; j < nodes.length; j++) {
+        const d = dist(nodes[i], nodes[j]);
+        if (d < CONNECT_DIST) {
+          const alpha = (1 - d/CONNECT_DIST) * 0.45;
+          ctx.beginPath();
+          ctx.strokeStyle = RED + alpha + ')';
+          ctx.lineWidth = 0.8;
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // lines to mouse
+    nodes.forEach(n => {
+      const d = dist(n, mouse);
+      if (d < MOUSE_DIST) {
+        const alpha = (1 - d/MOUSE_DIST) * 0.75;
+        ctx.beginPath();
+        ctx.strokeStyle = RED + alpha + ')';
+        ctx.lineWidth = 1;
+        ctx.moveTo(n.x, n.y);
+        ctx.lineTo(mouse.x, mouse.y);
+        ctx.stroke();
+      }
+    });
+
+    // nodes
+    nodes.forEach(n => {
+      const d = dist(n, mouse);
+      const nearMouse = d < MOUSE_DIST;
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, nearMouse ? n.r * 1.8 : n.r, 0, Math.PI*2);
+      ctx.fillStyle = nearMouse ? RED + '1)' : RED + '0.55)';
+      ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+  }
+
+  resize();
+  makeNodes();
+  draw();
+</script>
+</body>
+</html>
