@@ -393,12 +393,13 @@ footer {
     </div>
   </div>
   <p class="hero-bio">
-    Final-year BE Cybersecurity student currently interning at <strong>CyArt</strong>,
+    BE Cybersecurity graduate currently interning at <strong>CyArt</strong>,
     building <strong>CyTrack</strong> — a multi-agent autonomous web pentesting platform
     running in production. I research how web applications break, build tools that automate that process,
     and document everything I learn.
   </p>
   <div class="chips">
+    <span class="chip">Founder · Project-Hellhound</span>
     <span class="chip">Offensive Security Research</span>
     <span class="chip">Automated Penetration Testing</span>
     <span class="chip">Security Tool Development</span>
@@ -433,9 +434,10 @@ footer {
 
   <div class="about-body fi">
     <p>
-      I'm <span class="hlw">Sree Danush S</span> — an offensive security engineer from Tamil Nadu,
-      studying Cybersecurity at Mahendra Engineering College.
-      My work lives at the intersection of <span class="hl">web security research, automation, and tool building</span>.
+      I'm <span class="hlw">Sree Danush S</span> — an offensive security engineer, tool builder, and
+      <span class="hl">founder of Project-Hellhound</span>, an open-source security research organisation
+      building autonomous offensive tools at the intersection of web security, AI, and automation.
+      BE Cybersecurity graduate from Mahendra Engineering College.
     </p>
     <p>
       At <span class="hl">CyArt</span>, I contribute to <span class="hlw">CyTrack</span> — a multi-agent
@@ -460,16 +462,28 @@ footer {
 
   <div class="proj-grid fi">
 
-    <div class="proj-card">
+    <div class="proj-card" style="grid-column:1/-1;">
       <div class="proj-head">
-        <div class="proj-name">Hellhound Framework</div>
-        <span class="badge" style="border-color:rgba(255,170,51,.4);color:#ffaa33;background:rgba(255,170,51,.07);">IN DEVELOPMENT</span>
+        <div class="proj-name">CMDmap</div>
+        <span class="badge live">OPEN SOURCE</span>
       </div>
       <p class="proj-desc">
-        Modular web penetration testing framework actively under development — focused on structured intelligence correlation and guided exploitation workflows. Features a hybrid console architecture, SPA-aware reconnaissance modules, parameter intelligence analysis, and a rule-based suggestion engine that assists operators in identifying logical attack paths while maintaining full transparency and control.
+        High-fidelity autonomous command injection detector built for modern web targets. Pairs a SPA-aware crawler with a 5-tier injection engine — direct output, time-blind, redirect, OOB, and adaptive WAF bypass. Every finding verified and delivered with a ready-to-run PoC. Zero false positives.
       </p>
-      <div class="tech-row"><span class="tch">Python</span><span class="tch">Autonomous</span><span class="tch">Multi-tier</span><span class="tch">OOB Server</span><span class="tch">Spider v11+</span></div>
-      <a href="https://github.com/l4zz3rj0d/Hellhound-Pentest" target="_blank" class="proj-link">→ github.com/l4zz3rj0d/Hellhound-Pentest</a>
+      <div class="tech-row"><span class="tch">Python</span><span class="tch">5-Tier Engine</span><span class="tch">OOB Listener</span><span class="tch">WAF Bypass</span><span class="tch">GPL-3.0</span></div>
+      <a href="https://github.com/project-hellhound/cmdmap" target="_blank" class="proj-link">→ github.com/project-hellhound/cmdmap</a>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-head">
+        <div class="proj-name">X5Sentry</div>
+        <span class="badge live">OPEN SOURCE</span>
+      </div>
+      <p class="proj-desc">
+        Autonomous XSS hunter — maps attack surfaces, analyzes character survivability, and validates vulnerabilities through headless browser automation. Handles Reflected, Stored, DOM-based, mXSS, uXSS, and Blind XSS vectors with a confidence scorer and visual evidence capture.
+      </p>
+      <div class="tech-row"><span class="tch">Python</span><span class="tch">Playwright</span><span class="tch">XSS</span><span class="tch">Headless Browser</span><span class="tch">GPL-3.0</span></div>
+      <a href="https://github.com/project-hellhound/X5Sentry" target="_blank" class="proj-link">→ github.com/project-hellhound/X5Sentry</a>
     </div>
 
     <div class="proj-card a">
@@ -478,7 +492,7 @@ footer {
         <span class="badge live">ACTIVE</span>
       </div>
       <p class="proj-desc">
-        Modular rule-based web application security testing framework built around a multi-agent architecture. Designed to automate vulnerability discovery by dividing the testing workflow into specialised agents — each responsible for detecting a specific class of security issues. Rule-based, adaptive, and running in production on real targets. Internal project — no public repo.
+        Modular rule-based web application security testing framework built around a multi-agent architecture. Designed to automate vulnerability discovery by dividing the testing workflow into specialised agents — each responsible for detecting a specific class of security issues. Internal project — no public repo.
       </p>
       <div class="tech-row"><span class="tch">Python</span><span class="tch">Multi-Agent</span><span class="tch">Autonomous</span><span class="tch">Production</span></div>
     </div>
@@ -493,6 +507,18 @@ footer {
       </p>
       <div class="tech-row"><span class="tch">Python</span><span class="tch">Async</span><span class="tch">Headless Browser</span><span class="tch">SPA-Aware</span><span class="tch">CLI</span></div>
       <a href="https://github.com/l4zz3rj0d/Hellhound-Spider" target="_blank" class="proj-link">→ github.com/l4zz3rj0d/Hellhound-Spider</a>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-head">
+        <div class="proj-name">Hellhound Framework</div>
+        <span class="badge" style="border-color:rgba(255,170,51,.4);color:#ffaa33;background:rgba(255,170,51,.07);">IN DEVELOPMENT</span>
+      </div>
+      <p class="proj-desc">
+        Modular web penetration testing framework focused on structured intelligence correlation and guided exploitation workflows. Features a hybrid console architecture, SPA-aware reconnaissance modules, parameter intelligence analysis, and a rule-based suggestion engine that identifies logical attack paths while maintaining full operator control.
+      </p>
+      <div class="tech-row"><span class="tch">Python</span><span class="tch">Autonomous</span><span class="tch">Multi-tier</span><span class="tch">OOB Server</span><span class="tch">Spider v11+</span></div>
+      <a href="https://github.com/l4zz3rj0d/Hellhound-Pentest" target="_blank" class="proj-link">→ github.com/l4zz3rj0d/Hellhound-Pentest</a>
     </div>
 
     <div class="proj-card g">
@@ -797,8 +823,9 @@ footer {
       <p style="color:var(--red);font-size:12px;margin-top:1rem;">Preferred: Email · GitHub · LinkedIn</p>
     </div>
     <div class="contact-links">
-      <a href="mailto:ssreedanush@gmail.com" class="cl"><div><div class="cl-lbl">EMAIL</div><div class="cl-val">ssreedanush@gmail.com</div></div></a>
+      <a href="/cdn-cgi/l/email-protection#03707071666667626d76706b43646e626a6f2d606c6e" class="cl"><div><div class="cl-lbl">EMAIL</div><div class="cl-val"><span class="__cf_email__" data-cfemail="c0b3b3b2a5a5a4a1aeb5b3a880a7ada1a9aceea3afad">[email&#160;protected]</span></div></div></a>
       <a href="https://github.com/l4zz3rj0d" target="_blank" class="cl"><div><div class="cl-lbl">GITHUB</div><div class="cl-val">github.com/l4zz3rj0d</div></div></a>
+      <a href="https://github.com/project-hellhound" target="_blank" class="cl"><div><div class="cl-lbl">PROJECT-HELLHOUND ORG</div><div class="cl-val">github.com/project-hellhound</div></div></a>
       <a href="https://www.linkedin.com/in/ssreedanush/" target="_blank" class="cl"><div><div class="cl-lbl">LINKEDIN</div><div class="cl-val">linkedin.com/in/ssreedanush</div></div></a>
       <a href="https://medium.com/@l4zz3rj0d" target="_blank" class="cl"><div><div class="cl-lbl">MEDIUM</div><div class="cl-val">@l4zz3rj0d</div></div></a>
       <a href="https://tryhackme.com/p/L4ZZ3RJ0D" target="_blank" class="cl"><div><div class="cl-lbl">TRYHACKME</div><div class="cl-val">L4ZZ3RJ0D</div></div></a>
@@ -812,7 +839,7 @@ footer {
   <span class="footer-note">Sree Danush S · Offensive Security Engineer · Continuously learning. Continuously building.</span>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   // ── FADE IN ──
   const io = new IntersectionObserver(
     entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); }),
@@ -899,17 +926,4 @@ footer {
       const d = dist(n, mouse);
       const nearMouse = d < MOUSE_DIST;
       ctx.beginPath();
-      ctx.arc(n.x, n.y, nearMouse ? n.r * 1.8 : n.r, 0, Math.PI*2);
-      ctx.fillStyle = nearMouse ? RED + '1)' : RED + '0.55)';
-      ctx.fill();
-    });
-
-    requestAnimationFrame(draw);
-  }
-
-  resize();
-  makeNodes();
-  draw();
-</script>
-</body>
-</html>
+      ctx.a
