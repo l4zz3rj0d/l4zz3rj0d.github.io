@@ -838,7 +838,7 @@ footer {
       <p style="color:var(--red);font-size:12px;margin-top:1rem;">Preferred: Discord · GitHub · LinkedIn</p>
     </div>
     <div class="contact-links">
-      <a href="/cdn-cgi/l/email-protection#03707071666667626d76706b43646e626a6f2d606c6e" class="cl"><div><div class="cl-lbl">EMAIL</div><div class="cl-val"><span class="__cf_email__" data-cfemail="c0b3b3b2a5a5a4a1aeb5b3a880a7ada1a9aceea3afad">[email&#160;protected]</span></div></div></a>
+      <a href="mailto:ssreedanush@gmail.com" class="cl"><div><div class="cl-lbl">EMAIL</div><div class="cl-val">ssreedanush@gmail.com</div></div></a>
       <a href="https://github.com/l4zz3rj0d" target="_blank" class="cl"><div><div class="cl-lbl">GITHUB</div><div class="cl-val">github.com/l4zz3rj0d</div></div></a>
       <a href="https://github.com/project-hellhound-org" target="_blank" class="cl"><div><div class="cl-lbl">PROJECT-HELLHOUND ORG</div><div class="cl-val">github.com/project-hellhound-org</div></div></a>
       <a href="https://www.linkedin.com/in/ssreedanush/" target="_blank" class="cl"><div><div class="cl-lbl">LINKEDIN</div><div class="cl-val">linkedin.com/in/ssreedanush</div></div></a>
@@ -941,4 +941,12 @@ footer {
       const d = dist(n, mouse);
       const nearMouse = d < MOUSE_DIST;
       ctx.beginPath();
+           ctx.arc(n.x, n.y, nearMouse ? n.r * 1.8 : n.r, 0, Math.PI*2);
+      ctx.fillStyle = nearMouse ? RED + '1)' : RED + '0.55)';
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  resize();
+  makeNodes();
       ctx.a
