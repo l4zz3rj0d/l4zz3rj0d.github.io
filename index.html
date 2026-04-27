@@ -941,12 +941,18 @@ footer {
       const d = dist(n, mouse);
       const nearMouse = d < MOUSE_DIST;
       ctx.beginPath();
-           ctx.arc(n.x, n.y, nearMouse ? n.r * 1.8 : n.r, 0, Math.PI*2);
+      ctx.arc(n.x, n.y, nearMouse ? n.r * 1.8 : n.r, 0, Math.PI*2);
       ctx.fillStyle = nearMouse ? RED + '1)' : RED + '0.55)';
       ctx.fill();
     });
+
     requestAnimationFrame(draw);
   }
+
   resize();
   makeNodes();
+  draw();
+</script>
+</body>
+</html>
       ctx.a
