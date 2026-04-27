@@ -299,7 +299,8 @@ h2 .acc { color:var(--red); }
   padding:1rem 1.2rem; display:flex; align-items:center; gap:.9rem;
   border-radius:3px; transition:box-shadow .2s;
 }
-.cert-card:hover { box-shadow:0 2px 10px rgba(232,0,45,0.08); }
+a.cert-card { text-decoration:none; }
+a.cert-card:hover { box-shadow:0 2px 10px rgba(232,0,45,0.15); border-color:var(--red-bd); }
 .cert-ico { font-family:var(--sans); font-size:1rem; font-weight:700; color:var(--amber); min-width:28px; }
 .cert-nm  { font-size:15px; color:var(--txt); line-height:1.5; }
 .cert-by  { font-size:12px; color:var(--txt3); letter-spacing:.5px; margin-top:2px; }
@@ -471,7 +472,7 @@ footer {
         High-fidelity autonomous command injection detector built for modern web targets. Pairs a SPA-aware crawler with a 5-tier injection engine — direct output, time-blind, redirect, OOB, and adaptive WAF bypass. Every finding verified and delivered with a ready-to-run PoC. Zero false positives.
       </p>
       <div class="tech-row"><span class="tch">Python</span><span class="tch">5-Tier Engine</span><span class="tch">OOB Listener</span><span class="tch">WAF Bypass</span><span class="tch">GPL-3.0</span></div>
-      <a href="https://github.com/project-hellhound/cmdmap" target="_blank" class="proj-link">→ github.com/project-hellhound/cmdmap</a>
+      <a href="https://github.com/project-hellhound-org/cmdmap" target="_blank" class="proj-link">→ github.com/project-hellhound-org/cmdmap</a>
     </div>
 
     <div class="proj-card">
@@ -483,7 +484,7 @@ footer {
         Autonomous XSS hunter — maps attack surfaces, analyzes character survivability, and validates vulnerabilities through headless browser automation. Handles Reflected, Stored, DOM-based, mXSS, uXSS, and Blind XSS vectors with a confidence scorer and visual evidence capture.
       </p>
       <div class="tech-row"><span class="tch">Python</span><span class="tch">Playwright</span><span class="tch">XSS</span><span class="tch">Headless Browser</span><span class="tch">GPL-3.0</span></div>
-      <a href="https://github.com/project-hellhound/X5Sentry" target="_blank" class="proj-link">→ github.com/project-hellhound/X5Sentry</a>
+      <a href="https://github.com/project-hellhound-org/X5Sentry" target="_blank" class="proj-link">→ github.com/project-hellhound-org/X5Sentry</a>
     </div>
 
     <div class="proj-card a">
@@ -506,7 +507,7 @@ footer {
         Async web crawler for security testing — maps endpoints, parameters, and security issues across traditional and SPA web applications. Standalone CLI tool with headless browser support.
       </p>
       <div class="tech-row"><span class="tch">Python</span><span class="tch">Async</span><span class="tch">Headless Browser</span><span class="tch">SPA-Aware</span><span class="tch">CLI</span></div>
-      <a href="https://github.com/l4zz3rj0d/Hellhound-Spider" target="_blank" class="proj-link">→ github.com/l4zz3rj0d/Hellhound-Spider</a>
+      <a href="https://github.com/project-hellhound-org/Hellhound-Spider" target="_blank" class="proj-link">→ github.com/project-hellhound-org/Hellhound-Spider</a>
     </div>
 
     <div class="proj-card">
@@ -518,7 +519,7 @@ footer {
         Modular web penetration testing framework focused on structured intelligence correlation and guided exploitation workflows. Features a hybrid console architecture, SPA-aware reconnaissance modules, parameter intelligence analysis, and a rule-based suggestion engine that identifies logical attack paths while maintaining full operator control.
       </p>
       <div class="tech-row"><span class="tch">Python</span><span class="tch">Autonomous</span><span class="tch">Multi-tier</span><span class="tch">OOB Server</span><span class="tch">Spider v11+</span></div>
-      <a href="https://github.com/l4zz3rj0d/Hellhound-Pentest" target="_blank" class="proj-link">→ github.com/l4zz3rj0d/Hellhound-Pentest</a>
+      <a href="https://github.com/project-hellhound-org/Hellhound-Pentest" target="_blank" class="proj-link">→ github.com/project-hellhound-org/Hellhound-Pentest</a>
     </div>
 
     <div class="proj-card g">
@@ -530,7 +531,7 @@ footer {
         AI-assisted OSINT investigator with a terminal-style interface. Integrates sherlock, maigret, whois, nmap, and crt.sh under a single case-based workflow powered by Gemini 2.5 Flash — correlating entities, breaches, and pivots into structured intelligence sessions.
       </p>
       <div class="tech-row"><span class="tch">Python</span><span class="tch">Gemini 2.5</span><span class="tch">OSINT</span><span class="tch">AI-Assisted</span><span class="tch">CLI</span></div>
-      <a href="https://github.com/l4zz3rj0d" target="_blank" class="proj-link">→ github.com/l4zz3rj0d</a>
+      <a href="https://github.com/project-hellhound-org/JOE-GOLDBERG" target="_blank" class="proj-link">→ github.com/project-hellhound-org/JOE-GOLDBERG</a>
     </div>
 
   </div>
@@ -761,12 +762,26 @@ footer {
   </div>
 
   <div class="certs-grid fi">
-    <div class="cert-card"><div class="cert-ico">EC</div><div><div class="cert-nm">Ethical Hacking Essentials</div><div class="cert-by">EC-COUNCIL</div></div></div>
-    <div class="cert-card"><div class="cert-ico">EC</div><div><div class="cert-nm">Network Defence Essentials</div><div class="cert-by">EC-COUNCIL</div></div></div>
-    <div class="cert-card"><div class="cert-ico">EC</div><div><div class="cert-nm">Digital Forensic Essentials</div><div class="cert-by">EC-COUNCIL</div></div></div>
-    <div class="cert-card"><div class="cert-ico">CS</div><div><div class="cert-nm">Cisco Ethical Hacker</div><div class="cert-by">CISCO</div></div></div>
-    <div class="cert-card"><div class="cert-ico">RT</div><div><div class="cert-nm">CCEP</div><div class="cert-by">RED TEAM LEADERS</div></div></div>
-    <div class="cert-card"><div class="cert-ico">IS</div><div><div class="cert-nm">Hands-on Pentesting with Metasploit</div><div class="cert-by">INFOSYS SPRINGBOARD</div></div></div>
+    <a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-O59FSUN5EB.pdf" target="_blank" class="cert-card">
+      <div class="cert-ico">TH</div>
+      <div><div class="cert-nm">Jr. Penetration Tester</div><div class="cert-by">TRYHACKME · VERIFIED</div></div>
+    </a>
+    <a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-OYCBQIXUDM.pdf" target="_blank" class="cert-card">
+      <div class="cert-ico">TH</div>
+      <div><div class="cert-nm">Web Application Pentesting</div><div class="cert-by">TRYHACKME · VERIFIED</div></div>
+    </a>
+    <a href="https://drive.google.com/file/d/1vTxTJONank6EKcmtlcUHGMt2x5A4WreI/view?usp=drive_link" target="_blank" class="cert-card">
+      <div class="cert-ico">IS</div>
+      <div><div class="cert-nm">Hands-on Pentesting with Metasploit</div><div class="cert-by">INFOSYS SPRINGBOARD · VERIFIED</div></div>
+    </a>
+    <a href="https://drive.google.com/file/d/1KMDAmhTNo8vxImXOY7HgVvcG8qAGA4_F/view?usp=drive_link" target="_blank" class="cert-card">
+      <div class="cert-ico">RT</div>
+      <div><div class="cert-nm">CCEP — Certified Cybersecurity Educator Pro</div><div class="cert-by">RED TEAM LEADERS · VERIFIED</div></div>
+    </a>
+    <a href="https://drive.google.com/file/d/17AeBj7gnI9NYn1ks2VJdGeIW1MsOBcYi/view?usp=sharing" target="_blank" class="cert-card">
+      <div class="cert-ico">CS</div>
+      <div><div class="cert-nm">Cisco Ethical Hacker</div><div class="cert-by">CISCO · VERIFIED</div></div>
+    </a>
   </div>
 </section>
 
@@ -825,7 +840,7 @@ footer {
     <div class="contact-links">
       <a href="/cdn-cgi/l/email-protection#03707071666667626d76706b43646e626a6f2d606c6e" class="cl"><div><div class="cl-lbl">EMAIL</div><div class="cl-val"><span class="__cf_email__" data-cfemail="c0b3b3b2a5a5a4a1aeb5b3a880a7ada1a9aceea3afad">[email&#160;protected]</span></div></div></a>
       <a href="https://github.com/l4zz3rj0d" target="_blank" class="cl"><div><div class="cl-lbl">GITHUB</div><div class="cl-val">github.com/l4zz3rj0d</div></div></a>
-      <a href="https://github.com/project-hellhound" target="_blank" class="cl"><div><div class="cl-lbl">PROJECT-HELLHOUND ORG</div><div class="cl-val">github.com/project-hellhound</div></div></a>
+      <a href="https://github.com/project-hellhound-org" target="_blank" class="cl"><div><div class="cl-lbl">PROJECT-HELLHOUND ORG</div><div class="cl-val">github.com/project-hellhound-org</div></div></a>
       <a href="https://www.linkedin.com/in/ssreedanush/" target="_blank" class="cl"><div><div class="cl-lbl">LINKEDIN</div><div class="cl-val">linkedin.com/in/ssreedanush</div></div></a>
       <a href="https://medium.com/@l4zz3rj0d" target="_blank" class="cl"><div><div class="cl-lbl">MEDIUM</div><div class="cl-val">@l4zz3rj0d</div></div></a>
       <a href="https://tryhackme.com/p/L4ZZ3RJ0D" target="_blank" class="cl"><div><div class="cl-lbl">TRYHACKME</div><div class="cl-val">L4ZZ3RJ0D</div></div></a>
