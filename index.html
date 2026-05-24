@@ -30,6 +30,10 @@
 
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior:smooth; }
+body, html { overflow-x:hidden; }
+/* Prevent empty space past footer */
+body { display:flex; flex-direction:column; }
+footer { margin-top:auto; }
 
 /* ── CUSTOM SCROLLBAR ── */
 ::-webkit-scrollbar { width:6px; }
@@ -59,8 +63,8 @@ body {
   background: var(--bg);
   color: var(--txt);
   font-family: var(--mono);
-  font-size: 16px;
-  line-height: 1.75;
+  font-size: 14px;
+  line-height: 1.65;
   overflow-x: hidden;
 }
 
@@ -70,39 +74,6 @@ body {
   transition: opacity 0.3s;
 }
 
-/* Custom cursor */
-#cursor-ring {
-  position: fixed;
-  width: 36px; height: 36px;
-  border: 1.5px solid rgba(255,34,68,0.7);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  transition: width 0.2s, height 0.2s, border-color 0.2s, opacity 0.2s;
-  mix-blend-mode: screen;
-}
-#cursor-dot {
-  position: fixed;
-  width: 5px; height: 5px;
-  background: var(--red);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 0 8px var(--red), 0 0 16px rgba(255,34,68,0.4);
-}
-
-/* Ripple click effect */
-.click-ripple {
-  position: fixed;
-  border-radius: 50%;
-  border: 2px solid rgba(255,34,68,0.6);
-  pointer-events: none;
-  z-index: 9998;
-  transform: translate(-50%, -50%) scale(0);
-  animation: rippleOut 0.6s ease-out forwards;
-}
 @keyframes rippleOut {
   to { transform: translate(-50%, -50%) scale(4); opacity: 0; }
 }
@@ -176,8 +147,8 @@ nav {
 /* ── SECTION BASE ── */
 section {
   position:relative; z-index:1;
-  padding: clamp(4.5rem,9vw,7rem) clamp(1rem,4vw,3rem);
-  max-width:1080px; margin:0 auto;
+  padding: clamp(2rem,4vw,3.5rem) clamp(2.5rem,5vw,5rem);
+  max-width:1280px; margin:0 auto;
 }
 .label {
   font-size:13px; letter-spacing:4px; text-transform:uppercase;
@@ -185,9 +156,9 @@ section {
 }
 h2 {
   font-family:var(--sans); font-weight:700;
-  font-size:clamp(1.8rem,4vw,2.5rem);
+  font-size:clamp(1.5rem,3.5vw,2.1rem);
   color:var(--txt); letter-spacing:1px;
-  margin-bottom:2.5rem; line-height:1.1;
+  margin-bottom:1.6rem; line-height:1.1;
 }
 h2 .acc { color:var(--red); }
 .divider { border:none; border-top:1px solid var(--border); }
@@ -213,9 +184,9 @@ h2 .acc { color:var(--red); }
   margin-bottom:1.8rem;
 }
 .hero-bio {
-  font-size:17px; line-height:2; color:var(--txt);
-  max-width:620px; margin-bottom:2rem;
-  padding-left:1.1rem;
+  font-size:15px; line-height:1.85; color:var(--txt);
+  max-width:620px; margin-bottom:1.6rem;
+  padding-left:1rem;
   border-left:3px solid var(--red);
 }
 .hero-bio strong { color:var(--txt); font-weight:normal; }
@@ -265,26 +236,188 @@ h2 .acc { color:var(--red); }
 .stat-lbl { font-size:13px; letter-spacing:2px; color:var(--txt2); margin-top:4px; }
 
 /* ── ABOUT ── */
-.about-body { font-size:17px; line-height:2; color:var(--txt); max-width:720px; }
-.about-body p { margin-bottom:1.1rem; }
+.about-body { font-size:15px; line-height:1.85; color:var(--txt); max-width:720px; }
+.about-body p { margin-bottom:.85rem; }
 .hl  { color:var(--red); font-style:normal; }
 .hlw { color:var(--txt); }
 .hla { color:var(--amber); }
 .hlc { color:var(--cyan); }
 
 /* ── PROJECTS ── */
-.proj-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1.25rem; align-items:stretch; }
+.proj-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1.5rem; align-items:start; }
+@property --angle { syntax:'<angle>'; initial-value:0deg; inherits:false; }
+@keyframes borderSpin { to { --angle:360deg; } }
 .proj-card {
-  background:var(--card); border:1px solid var(--border);
+  background:var(--card); border:1px solid rgba(255,34,68,0.2);
   border-top:3px solid var(--red);
-  padding:1.75rem; border-radius:3px;
-  box-shadow: 0 2px 8px rgba(232,0,45,0.06);
-  transition:box-shadow .2s, border-color .2s;
+  padding:1.25rem 1.4rem; border-radius:4px;
+  box-shadow:0 2px 12px rgba(232,0,45,0.07);
+  position:relative; cursor:default; overflow:hidden; isolation:isolate;
+  transition:transform .35s cubic-bezier(0.34,1.56,0.64,1), box-shadow .35s ease, border-color .3s ease;
+}
+.proj-card::before {
+  content:''; position:absolute; inset:-2px; border-radius:5px;
+  background:conic-gradient(from var(--angle,0deg),
+    transparent 0deg,transparent 120deg,
+    rgba(255,34,68,0) 150deg,rgba(255,34,68,0.9) 180deg,
+    rgba(255,120,150,1) 200deg,rgba(255,34,68,0.9) 220deg,
+    rgba(255,34,68,0) 240deg,transparent 270deg,transparent 360deg);
+  z-index:-1; opacity:0; transition:opacity .3s ease;
+}
+.proj-card::after {
+  content:''; position:absolute; inset:1px; border-radius:3px;
+  background:var(--card); z-index:-1;
+}
+.proj-card:hover::before { opacity:1; animation:borderSpin 2.2s linear infinite; }
+.proj-card:hover {
+  transform:translateY(-9px) scale(1.022);
+  box-shadow:0 24px 60px rgba(232,0,45,0.3), 0 4px 18px rgba(0,0,0,0.5);
+  border-color:rgba(255,34,68,0); z-index:10;
+}
+.proj-card.a::before { background:conic-gradient(from var(--angle,0deg),transparent 0deg,transparent 120deg,rgba(255,170,51,0) 150deg,rgba(255,170,51,0.9) 180deg,rgba(255,210,120,1) 200deg,rgba(255,170,51,0.9) 220deg,rgba(255,170,51,0) 240deg,transparent 270deg,transparent 360deg); }
+.proj-card.g::before { background:conic-gradient(from var(--angle,0deg),transparent 0deg,transparent 120deg,rgba(160,160,160,0) 150deg,rgba(160,160,160,0.85) 180deg,rgba(220,220,220,1) 200deg,rgba(160,160,160,0.85) 220deg,rgba(160,160,160,0) 240deg,transparent 270deg,transparent 360deg); }
+.proj-banner-card { padding-top:0; overflow:hidden; }
+.proj-banner-wrap {
+  width:100%; height:160px; overflow:hidden;
+  border-radius:2px 2px 0 0; margin-bottom:1rem;
+  border-bottom:1px solid rgba(255,34,68,0.18);
+}
+.proj-banner-wrap img {
+  width:100%; height:100%;
+  object-fit:cover; object-position:center center;
+  display:block;
+  filter:brightness(0.82) saturate(1.1) contrast(1.05);
+  transition:filter .4s ease, transform .5s ease;
+}
+.proj-card:hover .proj-banner-wrap img {
+  filter:brightness(1.0) saturate(1.3) contrast(1.05);
+  transform:scale(1.07);
+}
+.proj-banner-empty {
+  width:100%; height:160px;
+  display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg,#0d0005 0%,#16000a 50%,#0a0008 100%);
+  border-radius:2px 2px 0 0; margin-bottom:1rem;
+  border-bottom:1px solid rgba(255,34,68,0.15);
+  position:relative; overflow:hidden;
+}
+.proj-banner-empty::before {
+  content:''; position:absolute; inset:0;
+  background:repeating-linear-gradient(45deg,transparent,transparent 22px,rgba(255,170,51,0.025) 22px,rgba(255,170,51,0.025) 24px);
+}
+.proj-banner-empty-txt {
+  font-family:var(--sans); font-size:.85rem; font-weight:700;
+  letter-spacing:8px; color:rgba(255,170,51,0.22); position:relative; z-index:1;
 }
 .proj-card.a { border-top-color:var(--amber); }
 .proj-card.c { border-top-color:var(--cyan);  }
 .proj-card.g { border-top-color:#888; }
-.proj-card:hover { box-shadow:0 4px 18px rgba(232,0,45,0.12); border-color:var(--red-bd); }
+
+/* ── Collapsed / Expand card layout ── */
+.proj-card { cursor:pointer; }
+.pc-collapsed { display:flex; flex-direction:column; gap:.55rem; }
+.pc-tags { display:flex; flex-wrap:wrap; gap:.35rem; }
+.pc-toggle-btn {
+  display:inline-flex; align-items:center; gap:.4rem;
+  background:none; border:1px solid rgba(255,34,68,0.28);
+  color:var(--red); font-family:var(--mono); font-size:11px;
+  letter-spacing:1.5px; padding:.3rem .8rem; border-radius:2px;
+  cursor:pointer; margin-top:.25rem; width:fit-content;
+  transition:background .2s, border-color .2s;
+}
+.pc-toggle-btn:hover { background:rgba(255,34,68,0.08); border-color:var(--red); }
+.pc-close { display:none; }
+.pc-open  { display:inline; }
+.pc-expand {
+  max-height:0; overflow:hidden;
+  transition:max-height .55s cubic-bezier(0.4,0,0.2,1), opacity .4s ease, margin-top .4s ease;
+  opacity:0; margin-top:0;
+}
+.proj-card.expanded .pc-expand  { max-height:620px; opacity:1; margin-top:.9rem; }
+.proj-card.expanded .pc-close   { display:inline; }
+.proj-card.expanded .pc-open    { display:none; }
+.proj-card.expanded .pc-toggle-btn { background:rgba(255,34,68,0.08); border-color:var(--red); }
+.pc-expand .proj-banner-wrap { margin-bottom:.85rem; border-radius:3px; }
+
+
+/* ── POP-OUT HOVER for all interactive cards ── */
+.skill-box,.lab-card,.cert-card,.blog-card,.cl,.edu-card { position:relative; isolation:isolate; }
+.skill-box::before,.lab-card::before,.cert-card::before,
+.blog-card::before,.cl::before,.edu-card::before {
+  content:''; position:absolute; inset:-2px; border-radius:inherit;
+  background:conic-gradient(from var(--angle,0deg),
+    transparent 0deg,transparent 120deg,
+    rgba(255,34,68,0) 150deg,rgba(255,34,68,0.82) 180deg,
+    rgba(255,120,150,0.95) 200deg,rgba(255,34,68,0.82) 220deg,
+    rgba(255,34,68,0) 240deg,transparent 270deg,transparent 360deg);
+  z-index:-1; opacity:0; transition:opacity .25s ease;
+}
+.skill-box::after,.lab-card::after,.cert-card::after,
+.blog-card::after,.cl::after,.edu-card::after {
+  content:''; position:absolute; inset:1px; border-radius:inherit;
+  background:var(--card); z-index:-1;
+}
+.skill-box:hover::before,.lab-card:hover::before,
+a.cert-card:hover::before,.blog-card:hover::before,
+.cl:hover::before,.edu-card:hover::before {
+  opacity:1; animation:borderSpin 2.2s linear infinite;
+}
+.skill-box {
+  transition:box-shadow .3s,border-color .3s,transform .3s cubic-bezier(0.34,1.56,0.64,1) !important;
+}
+.skill-box:hover {
+  transform:translateY(-6px) scale(1.03) !important;
+  box-shadow:0 18px 46px rgba(232,0,45,0.22) !important;
+  border-color:rgba(255,34,68,0) !important; z-index:10;
+}
+.lab-card {
+  transition:box-shadow .3s,border-color .3s,transform .3s cubic-bezier(0.34,1.56,0.64,1) !important;
+}
+.lab-card:hover {
+  transform:translateY(-7px) scale(1.025) !important;
+  box-shadow:0 18px 44px rgba(232,0,45,0.22) !important;
+  border-color:rgba(255,34,68,0) !important; z-index:10;
+}
+.cert-card {
+  transition:box-shadow .3s,border-color .3s,transform .3s cubic-bezier(0.34,1.56,0.64,1) !important;
+}
+a.cert-card:hover {
+  transform:translateY(-7px) scale(1.025) !important;
+  box-shadow:0 18px 44px rgba(232,0,45,0.22) !important;
+  border-color:rgba(255,34,68,0) !important; z-index:10;
+}
+.blog-card {
+  transition:box-shadow .3s,border-color .3s,transform .3s cubic-bezier(0.34,1.56,0.64,1) !important;
+}
+.blog-card:hover {
+  transform:translateY(-6px) scale(1.02) !important;
+  box-shadow:0 16px 40px rgba(232,0,45,0.2) !important;
+  border-color:rgba(255,34,68,0) !important; z-index:10;
+}
+.cl {
+  transition:box-shadow .3s,border-color .3s,transform .3s cubic-bezier(0.34,1.56,0.64,1) !important;
+}
+.cl:hover {
+  transform:translateX(8px) !important;
+  box-shadow:0 8px 26px rgba(232,0,45,0.16) !important;
+  border-color:rgba(255,34,68,0) !important; z-index:10;
+}
+.tl-item {
+  transition:opacity .6s ease,transform .6s cubic-bezier(0.16,1,0.3,1),padding .25s;
+}
+.tl-item:hover { padding-left:.5rem; }
+.edu-card {
+  transition:box-shadow .3s,border-color .3s,transform .3s cubic-bezier(0.34,1.56,0.64,1) !important;
+}
+.edu-card:hover {
+  transform:translateY(-6px) scale(1.02) !important;
+  box-shadow:0 16px 40px rgba(232,0,45,0.2) !important;
+  border-color:rgba(255,34,68,0) !important; z-index:10;
+}
+.btn {
+  transition:all .25s,transform .2s cubic-bezier(0.34,1.56,0.64,1) !important;
+}
+.btn:hover { transform:translateY(-3px) scale(1.05) !important; }
 
 .proj-head { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:.6rem; }
 .proj-name { font-family:var(--sans); font-size:1.2rem; font-weight:700; color:var(--txt); }
@@ -310,7 +443,7 @@ h2 .acc { color:var(--red); }
 .proj-link:hover { color:var(--red); border-color:var(--red); }
 
 /* ── SKILLS ── */
-.skills-wrap { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1.4rem; }
+.skills-wrap { display:grid; grid-template-columns:repeat(2,1fr); gap:1.4rem; }
 .skill-box {
   background:var(--card); border:1px solid var(--border); padding:1.6rem 1.4rem; border-radius:3px;
   box-shadow:0 1px 4px rgba(0,0,0,0.04);
@@ -397,7 +530,7 @@ h2 .acc { color:var(--red); }
 .tl-pts li::before { content:'› '; color:var(--red); }
 
 /* ── CERTS + EDU ── */
-.edu-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1rem; margin-bottom:2rem; }
+.edu-row { display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:2rem; }
 .edu-card {
   background:var(--card); border:1px solid var(--border); padding:1.5rem;
   border-radius:3px; box-shadow:0 1px 4px rgba(0,0,0,0.04);
@@ -458,10 +591,11 @@ a.cert-card:hover { box-shadow:0 2px 10px rgba(232,0,45,0.15); border-color:var(
 footer {
   position:relative; z-index:1;
   border-top:1px solid var(--border);
-  padding:2rem clamp(1rem,4vw,3rem);
+  padding:1.5rem clamp(1rem,4vw,3rem);
   display:flex; justify-content:space-between; align-items:center;
   flex-wrap:wrap; gap:1rem;
-  background:var(--bg2); { font-family:var(--sans); font-size:1rem; font-weight:700; color:var(--red); letter-spacing:2px; }
+  background:var(--bg2);
+  margin-bottom:0; { font-family:var(--sans); font-size:1rem; font-weight:700; color:var(--red); letter-spacing:2px; }
 .footer-note { font-size:13px; color:var(--txt3); }
 
 /* ── SECTION REVEAL SYSTEM ── */
@@ -507,6 +641,8 @@ hr.divider.visible::after { transform: scaleX(1); }
   opacity: 1; transform: translateY(0) scale(1);
 }
 
+/* Contributions section uses same proj-card styles — already covered */
+
 /* Timeline item slide from left */
 .tl-item {
   opacity: 0; transform: translateX(-36px);
@@ -539,6 +675,149 @@ section.entering::before { transform: scaleX(1); }
   .contact-grid { grid-template-columns:1fr; }
   footer { flex-direction:column; text-align:center; }
 }
+
+/* ── SCROLL ANIMATION CLASSES ── */
+.hdr-pre {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity .6s ease, transform .6s cubic-bezier(0.16,1,0.3,1);
+}
+.hdr-in {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+.label.hdr-pre  { transition-delay: 0s; }
+h2.hdr-pre      { transition-delay: .08s; }
+
+/* Cards start invisible, stagger in */
+.proj-card, .skill-box, .lab-card,
+.cert-card, .blog-card, .tl-item,
+.edu-card, .cl, .section-sub {
+  opacity: 0;
+  transform: translateY(28px) scale(0.97);
+  transition: opacity .55s ease,
+              transform .55s cubic-bezier(0.16,1,0.3,1);
+}
+.proj-card.visible, .skill-box.visible, .lab-card.visible,
+.cert-card.visible, .blog-card.visible, .tl-item.visible,
+.edu-card.visible, .cl.visible, .section-sub.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+
+section:last-of-type { padding-bottom: 1.5rem; }
+
+
+/* ── PROJECTS & CONTRIBUTIONS ── */
+.proj-grid {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:1.5rem;
+  align-items:start;
+}
+
+/* Base card */
+.proj-card {
+  background: var(--card);
+  border: 1px solid rgba(255,34,68,0.15);
+  border-left: 3px solid var(--red);
+  border-radius: 3px;
+  padding: 0;
+  position: relative;
+  cursor: default;
+  display: block;
+  overflow: hidden;
+  isolation: isolate;
+  transition: transform .35s cubic-bezier(0.34,1.56,0.64,1),
+              box-shadow .35s ease,
+              border-color .3s ease;
+}
+
+/* Spinning conic border on hover */
+
+
+.proj-card::before {
+  content:''; position:absolute; inset:-2px; border-radius:4px;
+  background: conic-gradient(from var(--angle,0deg),
+    transparent 0deg, transparent 100deg,
+    rgba(255,34,68,0) 140deg, rgba(255,34,68,0.9) 180deg,
+    rgba(255,120,150,1) 200deg, rgba(255,34,68,0.9) 220deg,
+    rgba(255,34,68,0) 260deg, transparent 300deg, transparent 360deg);
+  z-index:-1; opacity:0; transition:opacity .3s ease;
+}
+.proj-card::after {
+  content:''; position:absolute; inset:1px; border-radius:2px;
+  background:var(--card); z-index:-1;
+}
+.proj-card:hover::before { opacity:1; animation:borderSpin 2.2s linear infinite; }
+.proj-card:hover {
+  transform: translateY(-7px) scale(1.018);
+  box-shadow: 0 20px 55px rgba(232,0,45,0.22), 0 4px 18px rgba(0,0,0,0.5);
+  border-color: rgba(255,34,68,0);
+  z-index: 10;
+}
+
+
+
+/* Contribution card — amber accent */
+.contrib-card {
+  border-left-color: var(--amber);
+}
+.contrib-card::before {
+  background: conic-gradient(from var(--angle,0deg),
+    transparent 0deg, transparent 100deg,
+    rgba(255,170,51,0) 140deg, rgba(255,170,51,0.9) 180deg,
+    rgba(255,210,120,1) 200deg, rgba(255,170,51,0.9) 220deg,
+    rgba(255,170,51,0) 260deg, transparent 300deg, transparent 360deg);
+}
+.contrib-card:hover { border-color:rgba(255,170,51,0); }
+
+/* Card body */
+.pc-body {
+  padding: 1.4rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: .65rem;
+}
+
+/* Description */
+.proj-desc {
+  font-size: 13.5px;
+  line-height: 1.75;
+  color: var(--txt);
+  margin: 0;
+}
+
+/* Inline code */
+.inline-code {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--red);
+  background: rgba(255,34,68,0.08);
+  padding: .1em .4em;
+  border-radius: 2px;
+}
+
+/* Section subtitle */
+.section-sub {
+  font-size: 13px;
+  color: var(--txt2);
+  margin: -.8rem 0 1.4rem;
+  letter-spacing: .5px;
+}
+
+/* No-repo tag */
+.no-repo {
+  font-size: 11px;
+  color: var(--txt3);
+  letter-spacing: 1.5px;
+  opacity: .6;
+}
+
+/* Chip link */
+
+a
 </style>
 </head>
 <body>
@@ -553,6 +832,7 @@ section.entering::before { transform: scaleX(1); }
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#projects">Projects</a></li>
+    <li><a href="#contributions">Contributions</a></li>
     <li><a href="#skills">Skills</a></li>
     <li><a href="#labs">Labs</a></li>
     <li><a href="#experience">Experience</a></li>
@@ -582,7 +862,7 @@ section.entering::before { transform: scaleX(1); }
     and document everything I learn.
   </p>
   <div class="chips">
-    <span class="chip">Founder · Project-Hellhound</span>
+    <span class="chip" onclick="window.open('https://www.linkedin.com/company/triops-security','_blank')" style="cursor:pointer;">Co-Founder · TriOps Security</span>
     <span class="chip">Offensive Security Research</span>
     <span class="chip">Automated Penetration Testing</span>
     <span class="chip">Security Tool Development</span>
@@ -643,78 +923,54 @@ section.entering::before { transform: scaleX(1); }
 <section id="projects">
   <div class="label">// Projects</div>
   <h2>What I've <span class="acc">Built</span></h2>
-
   <div class="proj-grid fi">
 
-    <div class="proj-card">
-      <div class="proj-head">
-        <div class="proj-name">CMDmap</div>
-        <span class="badge live">ACTIVE</span>
+    <div class="proj-card fi" data-num="01">
+      <div class="pc-body">
+        <div class="proj-head">
+          <div class="proj-name">Hellhound Spider</div>
+          <span class="badge live">ACTIVE</span>
+        </div>
+        <p class="proj-desc">Fast async web crawler for security testing — maps endpoints, parameters, and security issues across traditional and SPA web applications. SPA-aware with full headless browser support.</p>
+        <div class="tech-row"><span class="tch">Python</span><span class="tch">Async</span><span class="tch">Headless Browser</span><span class="tch">SPA-Aware</span><span class="tch">CLI</span></div>
+        <a href="https://github.com/project-hellhound-org/Hellhound-Spider" target="_blank" class="proj-link">→ github.com/project-hellhound-org/Hellhound-Spider</a>
       </div>
-      <p class="proj-desc">
-        High-fidelity autonomous command injection detector built for modern web targets. Pairs a SPA-aware crawler with a 5-tier injection engine — direct output, time-blind, redirect, OOB, and adaptive WAF bypass. Every finding verified and delivered with a ready-to-run PoC. Zero false positives.
-      </p>
-      <div class="tech-row"><span class="tch">Python</span><span class="tch">5-Tier Engine</span><span class="tch">OOB Listener</span><span class="tch">WAF Bypass</span><span class="tch">GPL-3.0</span></div>
-      <a href="https://github.com/project-hellhound-org/cmdmap" target="_blank" class="proj-link">→ github.com/project-hellhound-org/cmdmap</a>
     </div>
 
-    <div class="proj-card">
-      <div class="proj-head">
-        <div class="proj-name">X5Sentry</div>
-        <span class="badge live">IN DEVELOPMENT</span>
+    <div class="proj-card fi" data-num="02">
+      <div class="pc-body">
+        <div class="proj-head">
+          <div class="proj-name">Hellhound Framework</div>
+          <span class="badge" style="border-color:rgba(255,170,51,.4);color:#ffaa33;background:rgba(255,170,51,.08);">IN DEVELOPMENT</span>
+        </div>
+        <p class="proj-desc">High-performance modular pentest framework engineered for comprehensive web application security testing. Hybrid console and desktop app with autonomous multi-tier attack chains and OOB server integration.</p>
+        <div class="tech-row"><span class="tch">Python</span><span class="tch">Autonomous</span><span class="tch">Multi-tier</span><span class="tch">OOB Server</span><span class="tch">Spider v11+</span></div>
+        <a href="https://github.com/project-hellhound-org/Hellhound-Pentest" target="_blank" class="proj-link">→ github.com/project-hellhound-org/Hellhound-Pentest</a>
       </div>
-      <p class="proj-desc">
-        Autonomous XSS hunter — maps attack surfaces, analyzes character survivability, and validates vulnerabilities through headless browser automation. Handles Reflected, Stored, DOM-based, mXSS, uXSS, and Blind XSS vectors with a confidence scorer and visual evidence capture.
-      </p>
-      <div class="tech-row"><span class="tch">Python</span><span class="tch">Playwright</span><span class="tch">XSS</span><span class="tch">Headless Browser</span><span class="tch">GPL-3.0</span></div>
-      <a href="https://github.com/project-hellhound-org/X5Sentry" target="_blank" class="proj-link">→ github.com/project-hellhound-org/X5Sentry</a>
     </div>
 
-    <div class="proj-card a">
-      <div class="proj-head">
-        <div class="proj-name">CyTrack — Multi-Agent Pentest Platform</div>
-        <span class="badge live">ACTIVE</span>
+    <div class="proj-card fi" data-num="03">
+      <div class="pc-body">
+        <div class="proj-head">
+          <div class="proj-name">CMDmap</div>
+          <span class="badge live">ACTIVE</span>
+        </div>
+        <p class="proj-desc">Autonomous command injection detector with a 5-tier engine — direct output, time-blind, redirect, OOB, and adaptive WAF bypass. SPA-aware crawler built-in. Every finding verified with a ready-to-run PoC. Zero false positives.</p>
+        <div class="tech-row"><span class="tch">Python</span><span class="tch">5-Tier Engine</span><span class="tch">OOB Listener</span><span class="tch">WAF Bypass</span><span class="tch">GPL-3.0</span></div>
+        <a href="https://github.com/project-hellhound-org/cmdmap" target="_blank" class="proj-link">→ github.com/project-hellhound-org/cmdmap</a>
       </div>
-      <p class="proj-desc">
-        Modular rule-based web application security testing framework built around a multi-agent architecture. Designed to automate vulnerability discovery by dividing the testing workflow into specialised agents — each responsible for detecting a specific class of security issues. Internal project — no public repo.
-      </p>
-      <div class="tech-row"><span class="tch">Python</span><span class="tch">Multi-Agent</span><span class="tch">Autonomous</span><span class="tch">Production</span></div>
     </div>
 
-    <div class="proj-card g">
-      <div class="proj-head">
-        <div class="proj-name">Hellhound Spider</div>
-        <span class="badge live">ACTIVE</span>
+    <div class="proj-card fi" data-num="04">
+      <div class="pc-body">
+        <div class="proj-head">
+          <div class="proj-name">Joe-Goldberg</div>
+          <span class="badge" style="border-color:rgba(255,170,51,.4);color:#ffaa33;background:rgba(255,170,51,.08);">IN DEVELOPMENT</span>
+        </div>
+        <p class="proj-desc">Autonomous OSINT investigator powered by a local LLM — stalks targets across 300+ platforms and narrates findings in Joe Goldberg's voice. Zero external APIs required. Just type: <code class="inline-code">joe stalk &lt;target&gt;</code></p>
+        <div class="tech-row"><span class="tch">Python</span><span class="tch">Gemini 2.5</span><span class="tch">OSINT</span><span class="tch">AI-Assisted</span><span class="tch">CLI</span></div>
+        <a href="https://github.com/project-hellhound-org/JOE-GOLDBERG" target="_blank" class="proj-link">→ github.com/project-hellhound-org/JOE-GOLDBERG</a>
       </div>
-      <p class="proj-desc">
-        Fast async web crawler for security testing — maps endpoints, parameters, and security issues across traditional and SPA web applications.
-      </p>
-      <div class="tech-row"><span class="tch">Python</span><span class="tch">Async</span><span class="tch">Headless Browser</span><span class="tch">SPA-Aware</span><span class="tch">CLI</span></div>
-      <a href="https://github.com/project-hellhound-org/Hellhound-Spider" target="_blank" class="proj-link">→ github.com/project-hellhound-org/Hellhound-Spider</a>
-    </div>
-
-    <div class="proj-card">
-      <div class="proj-head">
-        <div class="proj-name">Hellhound Framework</div>
-        <span class="badge" style="border-color:rgba(255,170,51,.4);color:#ffaa33;background:rgba(255,170,51,.07);">IN DEVELOPMENT</span>
-      </div>
-      <p class="proj-desc">
-        Hellhound is a high-performance, modular security framework engineered for comprehensive web application penetration testing in a hybrid console and desktop app.
-      </p>
-      <div class="tech-row"><span class="tch">Python</span><span class="tch">Autonomous</span><span class="tch">Multi-tier</span><span class="tch">OOB Server</span><span class="tch">Spider v11+</span></div>
-      <a href="https://github.com/project-hellhound-org/Hellhound-Pentest" target="_blank" class="proj-link">→ github.com/project-hellhound-org/Hellhound-Pentest</a>
-    </div>
-
-    <div class="proj-card g">
-      <div class="proj-head">
-        <div class="proj-name">Joe-Goldberg</div>
-        <span class="badge" style="border-color:rgba(255,170,51,.4);color:#ffaa33;background:rgba(255,170,51,.07);">IN DEVELOPMENT</span>
-      </div>
-      <p class="proj-desc">
-        Autonomous OSINT investigator powered by local LLM — stalks targets across 300+ platforms, narrates findings in Joe Goldberg's voice. Zero APIs. Just type: joe and stalk <target> 
-      </p>
-      <div class="tech-row"><span class="tch">Python</span><span class="tch">Gemini 2.5</span><span class="tch">OSINT</span><span class="tch">AI-Assisted</span><span class="tch">CLI</span></div>
-      <a href="https://github.com/project-hellhound-org/JOE-GOLDBERG" target="_blank" class="proj-link">→ github.com/project-hellhound-org/JOE-GOLDBERG</a>
     </div>
 
   </div>
@@ -722,7 +978,42 @@ section.entering::before { transform: scaleX(1); }
 
 <hr class="divider">
 
-<!-- ═══ SKILLS ═══ -->
+<!-- ═══ CONTRIBUTIONS ═══ -->
+<section id="contributions">
+  <div class="label">// Contributions</div>
+  <h2>Where I've <span class="acc">Contributed</span></h2>
+  <p class="section-sub fi">Projects I actively contributed to — not personal builds. Code, agents, and modules shipped to production.</p>
+  <div class="proj-grid fi">
+
+    <div class="proj-card contrib-card fi" data-num="C1">
+      <div class="pc-body">
+        <div class="proj-head">
+          <div class="proj-name">X5Sentry</div>
+          <span class="badge live">IN DEVELOPMENT</span>
+        </div>
+        <p class="proj-desc">Autonomous XSS hunter — maps attack surfaces, analyzes character survivability, and validates via headless browser. Handles Reflected, Stored, DOM, mXSS, uXSS, and Blind XSS with confidence scoring and visual evidence capture.</p>
+        <div class="tech-row"><span class="tch">Python</span><span class="tch">Playwright</span><span class="tch">XSS</span><span class="tch">Headless Browser</span><span class="tch">GPL-3.0</span></div>
+        <a href="https://github.com/project-hellhound-org/X5Sentry" target="_blank" class="proj-link">→ github.com/project-hellhound-org/X5Sentry</a>
+      </div>
+    </div>
+
+    <div class="proj-card contrib-card fi" data-num="C2">
+      <div class="pc-body">
+        <div class="proj-head">
+          <div class="proj-name">CyTrack</div>
+          <span class="badge prod">ACTIVE</span>
+        </div>
+        <p class="proj-desc">Multi-agent autonomous web pentesting platform at CyArt. Modular rule-based architecture where each agent targets a specific vulnerability class. Running in production on live targets.</p>
+        <div class="tech-row"><span class="tch">Python</span><span class="tch">Multi-Agent</span><span class="tch">Autonomous</span><span class="tch">Production</span></div>
+        <span class="no-repo">⊘ Internal — no public repository</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
 <section id="skills">
   <div class="label">// Skills</div>
   <h2>Technical <span class="acc">Focus</span></h2>
@@ -1037,80 +1328,25 @@ section.entering::before { transform: scaleX(1); }
   <span class="footer-note">Sree Danush S · Offensive Security Engineer · Continuously learning. Continuously building.</span>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-// ═══════════════════════════════════════════════════════════════
-// PORTFOLIO ENHANCED v3 — FLOATING PARTICLES + SCROLL THEATRE
-// ═══════════════════════════════════════════════════════════════
-
-// ─────────────────────────────────────────
-// CUSTOM CURSOR
-// ─────────────────────────────────────────
-const cursorRing = document.createElement('div');
-cursorRing.id = 'cursor-ring';
-document.body.appendChild(cursorRing);
-const cursorDot = document.createElement('div');
-cursorDot.id = 'cursor-dot';
-document.body.appendChild(cursorDot);
-
-let mx = -999, my = -999, rx = -999, ry = -999;
-
-document.addEventListener('mousemove', e => {
-  mx = e.clientX; my = e.clientY;
-  cursorDot.style.left = mx + 'px';
-  cursorDot.style.top  = my + 'px';
-  cursorRing.style.opacity = '1';
-  cursorDot.style.opacity  = '1';
-});
-document.addEventListener('mouseleave', () => {
-  cursorRing.style.opacity = '0'; cursorDot.style.opacity = '0';
-});
-
-(function animCursor() {
-  rx += (mx - rx) * 0.12;
-  ry += (my - ry) * 0.12;
-  cursorRing.style.left = rx + 'px';
-  cursorRing.style.top  = ry + 'px';
-  requestAnimationFrame(animCursor);
-})();
-
-document.querySelectorAll('a,button,.btn,.proj-card,.skill-box,.cert-card').forEach(el => {
-  el.addEventListener('mouseenter', () => {
-    cursorRing.style.width = '54px';
-    cursorRing.style.height = '54px';
-    cursorRing.style.borderColor = 'rgba(255,34,68,1)';
-  });
-  el.addEventListener('mouseleave', () => {
-    cursorRing.style.width = '36px';
-    cursorRing.style.height = '36px';
-    cursorRing.style.borderColor = 'rgba(255,34,68,0.7)';
-  });
-});
-
-// Click ripple
-document.addEventListener('click', e => {
-  const r = document.createElement('div');
-  r.className = 'click-ripple';
-  r.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;width:28px;height:28px;`;
-  document.body.appendChild(r);
-  setTimeout(() => r.remove(), 650);
-});
-
-// ─────────────────────────────────────────
-// PARTICLE CANVAS — ALWAYS FLOATING
-// ─────────────────────────────────────────
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+<script>
 const canvas = document.getElementById('node-canvas');
 const ctx    = canvas.getContext('2d');
 
-let W, H, pageScrollY = 0;
-let targetMX = -9999, targetMY = -9999;
-let smoothMX = -9999, smoothMY = -9999;
+let W, H, scrollY = 0;
+let mouseX = -9999, mouseY = -9999;
+let smoothX = -9999, smoothY = -9999;
 
-const COUNT        = 130;
-const CONNECT_DIST = 155;
-const MOUSE_DIST   = 250;
-const REPEL_DIST   = 110;
-const RED  = 'rgba(255,34,68,';
-const CYAN = 'rgba(51,204,255,';
+// ── Config ──
+const COUNT        = 75;
+const CONNECT_DIST = 150;
+const MOUSE_DIST   = 180;
+const REPEL_DIST   = 80;
+const NODE_COLOR   = [232, 28, 52];   // red only
+
+function col(a) {
+  return 'rgba(' + NODE_COLOR[0] + ',' + NODE_COLOR[1] + ',' + NODE_COLOR[2] + ',' + a + ')';
+}
 
 let nodes = [];
 
@@ -1119,155 +1355,132 @@ function resize() {
   H = canvas.height = window.innerHeight;
 }
 
-function makeNodes() {
-  nodes = Array.from({length: COUNT}, () => {
-    // Random drift direction with gentle speed
-    const angle = Math.random() * Math.PI * 2;
-    const speed = 0.25 + Math.random() * 0.55;
-    return {
-      x:  Math.random() * W,
-      y:  Math.random() * H,
-      vx: Math.cos(angle) * speed,
-      vy: Math.sin(angle) * speed,
-      // Sinusoidal float drift
-      floatAx: (Math.random() - 0.5) * 0.012,  // horizontal float amplitude rate
-      floatAy: (Math.random() - 0.5) * 0.008,  // vertical float amplitude rate
-      floatPhaseX: Math.random() * Math.PI * 2,
-      floatPhaseY: Math.random() * Math.PI * 2,
-      floatSpeedX: 0.003 + Math.random() * 0.004,
-      floatSpeedY: 0.002 + Math.random() * 0.005,
-      r:  1 + Math.random() * 2.2,
-      pulse: Math.random() * Math.PI * 2,
-      pulseSpeed: 0.018 + Math.random() * 0.025,
-      color: Math.random() < 0.12 ? 'cyan' : 'red',
-      layer: 0.6 + Math.random() * 0.8,  // for parallax depth
-      // wandering: slow random direction change
-      wanderAngle: Math.random() * Math.PI * 2,
-      wanderSpeed: (Math.random() - 0.5) * 0.003,
-    };
-  });
+function makeNode() {
+  // Very slow random drift direction
+  const angle = Math.random() * Math.PI * 2;
+  const spd   = 0.06 + Math.random() * 0.10;   // intentionally slow
+  return {
+    x:  Math.random() * W,
+    y:  Math.random() * H,
+    vx: Math.cos(angle) * spd,
+    vy: Math.sin(angle) * spd,
+    r:  2.0 + Math.random() * 2.5,
+    // independent float oscillation
+    fx: Math.random() * Math.PI * 2,
+    fy: Math.random() * Math.PI * 2,
+    fsx: 0.0010 + Math.random() * 0.0012,
+    fsy: 0.0008 + Math.random() * 0.0010,
+    // pulse for brightness
+    pulse:      Math.random() * Math.PI * 2,
+    pulseSpeed: 0.012 + Math.random() * 0.014,
+    // slow wander
+    wander:  Math.random() * Math.PI * 2,
+    wSpd:    (Math.random() - 0.5) * 0.0012,
+    layer:   0.4 + Math.random() * 0.8,
+  };
 }
 
-// Click burst
-function burst(cx, cy) {
-  for (let i = 0; i < 14; i++) {
-    const angle = (i / 14) * Math.PI * 2;
-    const spd   = 1.8 + Math.random() * 3.5;
-    nodes.push({
-      x: cx, y: cy,
-      vx: Math.cos(angle) * spd,
-      vy: Math.sin(angle) * spd,
-      floatAx: 0, floatAy: 0,
-      floatPhaseX: 0, floatPhaseY: 0,
-      floatSpeedX: 0, floatSpeedY: 0,
-      r: 1.2 + Math.random() * 1.8,
-      pulse: 0, pulseSpeed: 0.06,
-      color: Math.random() < 0.5 ? 'cyan' : 'red',
-      layer: 1,
-      wanderAngle: 0, wanderSpeed: 0,
-      life: 1,
-      decay: 0.016 + Math.random() * 0.014,
-    });
+function initNodes() {
+  nodes = Array.from({ length: COUNT }, makeNode);
+}
+
+window.addEventListener('mousemove', function(e) {
+  mouseX = e.clientX; mouseY = e.clientY;
+}, { passive: true });
+
+window.addEventListener('touchmove', function(e) {
+  mouseX = e.touches[0].clientX;
+  mouseY = e.touches[0].clientY;
+}, { passive: true });
+
+window.addEventListener('scroll', function() {
+  scrollY = window.scrollY;
+}, { passive: true });
+
+window.addEventListener('resize', function() { resize(); initNodes(); });
+
+function draw() {
+  // Smooth mouse tracking — lerp at 3.5% per frame = very silky
+  if (smoothX < -999) { smoothX = mouseX; smoothY = mouseY; }
+  else {
+    smoothX += (mouseX - smoothX) * 0.035;
+    smoothY += (mouseY - smoothY) * 0.035;
   }
-  if (nodes.length > COUNT + 80) nodes.splice(COUNT, nodes.length - COUNT);
-}
-
-// Input
-window.addEventListener('mousemove', e => {
-  targetMX = e.clientX; targetMY = e.clientY;
-}, {passive:true});
-window.addEventListener('touchmove', e => {
-  targetMX = e.touches[0].clientX; targetMY = e.touches[0].clientY;
-}, {passive:true});
-window.addEventListener('click',      e => burst(e.clientX, e.clientY));
-window.addEventListener('touchstart', e => burst(e.touches[0].clientX, e.touches[0].clientY), {passive:true});
-window.addEventListener('resize', () => { resize(); makeNodes(); });
-window.addEventListener('scroll', () => { pageScrollY = window.scrollY; }, {passive:true});
-
-// ─────────────────────────────────────────
-// MAIN DRAW LOOP
-// ─────────────────────────────────────────
-function drawCanvas() {
-  // Smooth mouse
-  smoothMX += (targetMX - smoothMX) * 0.07;
-  smoothMY += (targetMY - smoothMY) * 0.07;
 
   const t = performance.now() * 0.001;
 
-  // Trail: partial clear for ghosting effect
-  ctx.fillStyle = 'rgba(12,0,5,0.20)';
+  // Low-alpha fill — nodes persist long enough to always be visible
+  ctx.fillStyle = 'rgba(10,0,4,0.16)';
   ctx.fillRect(0, 0, W, H);
 
   // ── UPDATE NODES ──
-  for (let i = nodes.length - 1; i >= 0; i--) {
-    const n = nodes[i];
+  for (var i = 0; i < nodes.length; i++) {
+    var n = nodes[i];
 
-    // Lifecycle (burst particles)
-    if (n.life !== undefined) {
-      n.life -= n.decay;
-      if (n.life <= 0) { nodes.splice(i, 1); continue; }
+    // Slow wander
+    n.wander += n.wSpd;
+    n.vx += Math.cos(n.wander) * 0.0008;
+    n.vy += Math.sin(n.wander) * 0.0008;
+
+    // Float oscillation
+    n.fx += n.fsx;
+    n.fy += n.fsy;
+    var floatX = Math.sin(n.fx) * 0.22;
+    var floatY = Math.cos(n.fy) * 0.18;
+
+    // Mouse repulsion — gentle push away, no snapping
+    if (mouseX > -999) {
+      var dx = n.x - smoothX, dy = n.y - smoothY;
+      var d2 = dx * dx + dy * dy;
+      if (d2 < REPEL_DIST * REPEL_DIST && d2 > 0.5) {
+        var d = Math.sqrt(d2);
+        var f = (1 - d / REPEL_DIST) * 0.85;
+        n.vx += (dx / d) * f * 0.045;
+        n.vy += (dy / d) * f * 0.045;
+      }
     }
 
-    // Wander: slowly rotate velocity direction
-    n.wanderAngle += n.wanderSpeed;
-    n.vx += Math.cos(n.wanderAngle) * 0.003;
-    n.vy += Math.sin(n.wanderAngle) * 0.003;
+    // Parallax scroll
+    n.vy -= (scrollY * 0.00004) * (1 - n.layer);
 
-    // Sinusoidal float on top of velocity
-    n.floatPhaseX += n.floatSpeedX;
-    n.floatPhaseY += n.floatSpeedY;
-    const floatX = Math.sin(n.floatPhaseX) * 60 * n.floatAx;
-    const floatY = Math.cos(n.floatPhaseY) * 60 * n.floatAy;
+    // Speed cap — keeps nodes slow
+    var spd = Math.sqrt(n.vx * n.vx + n.vy * n.vy);
+    if (spd > 0.90) { n.vx *= 0.90 / spd; n.vy *= 0.90 / spd; }
 
-    // Mouse repulsion (smooth, elastic)
-    const dmx = n.x - smoothMX, dmy = n.y - smoothMY;
-    const dm2 = dmx*dmx + dmy*dmy;
-    if (dm2 < REPEL_DIST * REPEL_DIST && dm2 > 1) {
-      const dm    = Math.sqrt(dm2);
-      const force = (1 - dm / REPEL_DIST) * 2.2;
-      n.vx += (dmx / dm) * force * 0.14;
-      n.vy += (dmy / dm) * force * 0.14;
-    }
-
-    // Scroll parallax nudge (particles drift with scroll depth)
-    const parallaxNudge = (pageScrollY * 0.0002) * (1 - n.layer);
-    n.vy -= parallaxNudge;
-
-    // Speed cap + damping
-    const spd = Math.sqrt(n.vx*n.vx + n.vy*n.vy);
-    if (spd > 2.8) { n.vx *= 2.8/spd; n.vy *= 2.8/spd; }
-    n.vx *= 0.988;
-    n.vy *= 0.988;
+    // Strong damping — drift decays quickly so they float not fly
+    n.vx *= 0.995;
+    n.vy *= 0.995;
 
     n.x += n.vx + floatX;
     n.y += n.vy + floatY;
-
-    // Wrap edges (seamless torus)
-    if (n.x < -30) n.x = W + 30;
-    else if (n.x > W + 30) n.x = -30;
-    if (n.y < -30) n.y = H + 30;
-    else if (n.y > H + 30) n.y = -30;
-
     n.pulse += n.pulseSpeed;
+
+    // Wrap
+    if (n.x < -40) n.x = W + 40;
+    else if (n.x > W + 40) n.x = -40;
+    if (n.y < -40) n.y = H + 40;
+    else if (n.y > H + 40) n.y = -40;
   }
 
   // ── DRAW CONNECTIONS ──
-  for (let i = 0; i < nodes.length; i++) {
-    for (let j = i + 1; j < nodes.length; j++) {
-      const a = nodes[i], b = nodes[j];
-      const dx = a.x - b.x, dy = a.y - b.y;
-      const d2 = dx*dx + dy*dy;
+  for (var i = 0; i < nodes.length; i++) {
+    for (var j = i + 1; j < nodes.length; j++) {
+      var a = nodes[i], b = nodes[j];
+      var dx = a.x - b.x, dy = a.y - b.y;
+      var d2 = dx * dx + dy * dy;
       if (d2 > CONNECT_DIST * CONNECT_DIST) continue;
-      const d   = Math.sqrt(d2);
-      const pct = 1 - d / CONNECT_DIST;
 
-      const aNear = (a.x-smoothMX)**2+(a.y-smoothMY)**2 < MOUSE_DIST*MOUSE_DIST;
-      const bNear = (b.x-smoothMX)**2+(b.y-smoothMY)**2 < MOUSE_DIST*MOUSE_DIST;
-      const glow  = aNear || bNear;
-      const isCyan = a.color==='cyan' || b.color==='cyan';
+      var d   = Math.sqrt(d2);
+      var pct = 1 - d / CONNECT_DIST;
 
-      ctx.lineWidth   = glow ? 1.3 : 0.65;
-      ctx.strokeStyle = (isCyan ? CYAN : RED) + (pct * (glow ? 0.85 : 0.3)) + ')';
+      var aNear = mouseX > -999 &&
+        (a.x - smoothX) * (a.x - smoothX) + (a.y - smoothY) * (a.y - smoothY) < MOUSE_DIST * MOUSE_DIST;
+      var bNear = mouseX > -999 &&
+        (b.x - smoothX) * (b.x - smoothX) + (b.y - smoothY) * (b.y - smoothY) < MOUSE_DIST * MOUSE_DIST;
+      var glow = aNear || bNear;
+
+      ctx.lineWidth   = glow ? 1.0 : 0.5;
+      ctx.strokeStyle = col(pct * (glow ? 0.72 : 0.26));
       ctx.beginPath();
       ctx.moveTo(a.x, a.y);
       ctx.lineTo(b.x, b.y);
@@ -1275,641 +1488,127 @@ function drawCanvas() {
     }
   }
 
-  // ── LINES TO MOUSE (with gradient) ──
-  for (let i = 0; i < nodes.length; i++) {
-    const n  = nodes[i];
-    const dx = n.x - smoothMX, dy = n.y - smoothMY;
-    const d2 = dx*dx + dy*dy;
-    if (d2 > MOUSE_DIST * MOUSE_DIST || smoothMX < 0) continue;
-    const d     = Math.sqrt(d2);
-    const alpha = (1 - d / MOUSE_DIST) * 0.9;
-    const grad  = ctx.createLinearGradient(n.x, n.y, smoothMX, smoothMY);
-    const col   = n.color === 'cyan' ? CYAN : RED;
-    grad.addColorStop(0, col + alpha + ')');
-    grad.addColorStop(1, col + '0)');
-    ctx.strokeStyle = grad;
-    ctx.lineWidth   = 1.5;
-    ctx.beginPath();
-    ctx.moveTo(n.x, n.y); ctx.lineTo(smoothMX, smoothMY);
-    ctx.stroke();
-  }
-
   // ── DRAW NODES ──
-  for (let i = 0; i < nodes.length; i++) {
-    const n    = nodes[i];
-    const life = n.life !== undefined ? n.life : 1;
-    const pf   = 0.82 + 0.18 * Math.sin(n.pulse + t * 1.5);
-    const dx   = n.x - smoothMX, dy = n.y - smoothMY;
-    const near = (dx*dx + dy*dy) < MOUSE_DIST * MOUSE_DIST && smoothMX > 0;
-    const r    = n.r * pf * life * (near ? 2.4 : 1);
-    const col  = n.color === 'cyan' ? CYAN : RED;
-    const alpha = (near ? 1 : 0.45 + 0.2 * Math.sin(n.pulse)) * life;
-
-    // Glow halo for nearby nodes
-    if (near) {
-      const halo = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, r * 4);
-      halo.addColorStop(0, col + '0.35)');
-      halo.addColorStop(1, col + '0)');
-      ctx.fillStyle = halo;
-      ctx.beginPath();
-      ctx.arc(n.x, n.y, r * 4, 0, Math.PI * 2);
-      ctx.fill();
+  for (var i = 0; i < nodes.length; i++) {
+    var n    = nodes[i];
+    var pf   = 0.78 + 0.22 * Math.sin(n.pulse + t);
+    var near = false;
+    if (mouseX > -999) {
+      var dx = n.x - smoothX, dy = n.y - smoothY;
+      near = dx * dx + dy * dy < MOUSE_DIST * MOUSE_DIST;
     }
 
-    ctx.fillStyle = col + alpha + ')';
+    var r     = n.r * pf * (near ? 2.6 : 1.0);
+    var alpha = near ? 1.0 : (0.52 + 0.28 * Math.sin(n.pulse));
+
+    // Always-on soft glow halo
+    var haloR = r * (near ? 4.5 : 3.2);
+    var haloA = near ? 0.28 : 0.13;
+    var halo = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, haloR);
+    halo.addColorStop(0,   col(haloA));
+    halo.addColorStop(0.45, col(haloA * 0.4));
+    halo.addColorStop(1,   col(0));
+    ctx.fillStyle = halo;
     ctx.beginPath();
-    ctx.arc(n.x, n.y, Math.max(0.5, r), 0, Math.PI * 2);
+    ctx.arc(n.x, n.y, haloR, 0, Math.PI * 2);
     ctx.fill();
-  }
 
-  // Cursor ambient glow on canvas
-  if (smoothMX > 0) {
-    const gr = ctx.createRadialGradient(smoothMX, smoothMY, 0, smoothMX, smoothMY, 90);
-    gr.addColorStop(0, RED + '0.12)');
-    gr.addColorStop(1, RED + '0)');
-    ctx.fillStyle = gr;
+    // Solid red core
+    ctx.fillStyle = col(alpha);
     ctx.beginPath();
-    ctx.arc(smoothMX, smoothMY, 90, 0, Math.PI * 2);
+    ctx.arc(n.x, n.y, Math.max(1.0, r), 0, Math.PI * 2);
     ctx.fill();
-  }
 
-  requestAnimationFrame(drawCanvas);
-}
+    // White hot centre
+    ctx.fillStyle = 'rgba(255,200,200,' + (alpha * 0.5) + ')';
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, Math.max(0.4, r * 0.3), 0, Math.PI * 2);
+    ctx.fill();
 
-resize(); makeNodes(); drawCanvas();
-
-// ─────────────────────────────────────────
-// SCROLL REVEAL ENGINE
-// ─────────────────────────────────────────
-
-// Helper: observe with staggered delay for children
-function staggerReveal(selector, delay = 80) {
-  const els = document.querySelectorAll(selector);
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      const siblings = Array.from(entry.target.parentElement?.children || [entry.target])
-        .filter(el => el.matches(selector));
-      const idx = siblings.indexOf(entry.target);
-      setTimeout(() => entry.target.classList.add('visible'), idx * delay);
-      obs.unobserve(entry.target);
-    });
-  }, { threshold: 0.1 });
-  els.forEach(el => obs.observe(el));
-}
-
-// Section headers
-const headerObs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) { e.target.classList.add('visible'); headerObs.unobserve(e.target); }
-  });
-}, { threshold: 0.2 });
-document.querySelectorAll('.label, h2').forEach(el => headerObs.observe(el));
-
-// Dividers
-const hrObs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) { e.target.classList.add('visible'); hrObs.unobserve(e.target); }
-  });
-}, { threshold: 0.5 });
-document.querySelectorAll('hr.divider').forEach(el => hrObs.observe(el));
-
-// Sections — scan line sweep
-const sectionObs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('entering');
-      setTimeout(() => e.target.classList.remove('entering'), 900);
-    }
-  });
-}, { threshold: 0.05 });
-document.querySelectorAll('section').forEach(s => sectionObs.observe(s));
-
-// Cards with stagger
-staggerReveal('.proj-card',  90);
-staggerReveal('.skill-box',  70);
-staggerReveal('.lab-card',   80);
-staggerReveal('.cert-card',  75);
-staggerReveal('.blog-card',  65);
-staggerReveal('.cl',         55);
-staggerReveal('.tl-item',    100);
-staggerReveal('.edu-card',   80);
-staggerReveal('.stat-cell',  50);
-
-// Legacy .fi support
-const fiObs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
-}, { threshold: 0.07 });
-document.querySelectorAll('.fi').forEach(el => fiObs.observe(el));
-
-// ─────────────────────────────────────────
-// SCROLL PROGRESS BAR
-// ─────────────────────────────────────────
-const progressBar = document.getElementById('scroll-progress');
-window.addEventListener('scroll', () => {
-  const st = window.scrollY;
-  const dh = document.documentElement.scrollHeight - window.innerHeight;
-  progressBar.style.width = (dh > 0 ? (st / dh) * 100 : 0) + '%';
-  pageScrollY = st;
-}, {passive: true});
-
-// ─────────────────────────────────────────
-// HERO PARALLAX (exits as you scroll)
-// ─────────────────────────────────────────
-const heroEls = [
-  [document.querySelector('.hero-name'),   0.20],
-  [document.querySelector('.hero-handle'), 0.14],
-  [document.querySelector('.hero-eye'),    0.09],
-  [document.querySelector('.hero-bio'),    0.06],
-];
-window.addEventListener('scroll', () => {
-  const s = window.scrollY;
-  heroEls.forEach(([el, speed]) => {
-    if (!el) return;
-    el.style.transform = `translateY(${s * speed}px)`;
-    el.style.opacity   = Math.max(0, 1 - s / 420).toFixed(3);
-  });
-}, {passive: true});
-
-// ─────────────────────────────────────────
-// TYPING EFFECT — console line
-// ─────────────────────────────────────────
-const consoleLine = document.querySelector('.console');
-if (consoleLine) {
-  const ps   = consoleLine.querySelector('.ps')?.outerHTML || '';
-  const text = consoleLine.textContent.replace(/lazzer@kali/,'').trim();
-  const style = document.createElement('style');
-  style.textContent = `.caret{animation:caretBlink 1s step-end infinite;color:var(--red)}
-    @keyframes caretBlink{50%{opacity:0}}`;
-  document.head.appendChild(style);
-  consoleLine.innerHTML = ps + ':~$ <span id="typed-out"></span><span class="caret">█</span>';
-  const typedEl = document.getElementById('typed-out');
-  let i = 0;
-  const type = () => { if (i < text.length) { typedEl.textContent += text[i++]; setTimeout(type, 26 + Math.random()*28); } };
-  setTimeout(type, 1000);
-}
-
-// ─────────────────────────────────────────
-// COUNTER ANIMATION
-// ─────────────────────────────────────────
-function animCount(el, endVal, suffix) {
-  const float = endVal % 1 !== 0;
-  let v = 0;
-  const step = endVal / (1400 / 16);
-  const id = setInterval(() => {
-    v += step;
-    if (v >= endVal) { v = endVal; clearInterval(id); }
-    el.textContent = float ? v.toFixed(2) : Math.floor(v) + suffix;
-  }, 16);
-}
-const cntObs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (!e.isIntersecting) return;
-    const el  = e.target;
-    const raw = el.textContent.trim();
-    const m   = raw.match(/^([\d.]+)(.*)/);
-    if (m) { animCount(el, parseFloat(m[1]), m[2]); cntObs.unobserve(el); }
-  });
-});
-document.querySelectorAll('.stat-num, .ctf-n').forEach(el => cntObs.observe(el));
-
-// ─────────────────────────────────────────
-// MAGNETIC BUTTONS
-// ─────────────────────────────────────────
-document.querySelectorAll('.btn').forEach(btn => {
-  btn.addEventListener('mousemove', e => {
-    const r  = btn.getBoundingClientRect();
-    const dx = (e.clientX - r.left - r.width/2)  * 0.28;
-    const dy = (e.clientY - r.top  - r.height/2) * 0.28;
-    btn.style.transform  = `translate(${dx}px, ${dy}px)`;
-    btn.style.transition = 'transform 0.08s linear';
-  });
-  btn.addEventListener('mouseleave', () => {
-    btn.style.transform  = 'translate(0,0)';
-    btn.style.transition = 'transform 0.45s cubic-bezier(0.16,1,0.3,1)';
-  });
-});
-
-// ─────────────────────────────────────────
-// CARD 3D TILT on hover
-// ─────────────────────────────────────────
-document.querySelectorAll('.proj-card, .skill-box').forEach(card => {
-  card.addEventListener('mousemove', e => {
-    const r   = card.getBoundingClientRect();
-    const cx  = r.left + r.width / 2;
-    const cy  = r.top  + r.height / 2;
-    const rx  = ((e.clientY - cy) / (r.height / 2)) * -6;
-    const ry  = ((e.clientX - cx) / (r.width  / 2)) *  6;
-    card.style.transform  = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-5px) scale(1.02)`;
-    card.style.transition = 'transform 0.1s linear, box-shadow 0.1s, border-color 0.1s';
-    card.style.boxShadow  = `0 12px 36px rgba(255,34,68,0.18), 0 0 0 1px rgba(255,34,68,0.3)`;
-  });
-  card.addEventListener('mouseleave', () => {
-    card.style.transform  = 'perspective(800px) rotateX(0) rotateY(0) translateY(0) scale(1)';
-    card.style.transition = 'transform 0.5s cubic-bezier(0.16,1,0.3,1), box-shadow 0.5s, border-color 0.25s';
-    card.style.boxShadow  = '';
-  });
-});
-</script>
-
-// ── CUSTOM CURSOR ──
-const cursorRing = document.createElement('div');
-cursorRing.id = 'cursor-ring';
-document.body.appendChild(cursorRing);
-const cursorDot = document.createElement('div');
-cursorDot.id = 'cursor-dot';
-document.body.appendChild(cursorDot);
-
-let mx = -999, my = -999, rx = -999, ry = -999;
-let cursorVisible = false;
-
-document.addEventListener('mousemove', e => {
-  mx = e.clientX; my = e.clientY;
-  if (!cursorVisible) { cursorVisible = true; cursorRing.style.opacity = '1'; cursorDot.style.opacity = '1'; }
-  cursorDot.style.left = mx + 'px';
-  cursorDot.style.top  = my + 'px';
-});
-
-document.addEventListener('mouseleave', () => {
-  cursorRing.style.opacity = '0';
-  cursorDot.style.opacity  = '0';
-  cursorVisible = false;
-});
-
-// Smooth ring following
-(function animateCursor() {
-  rx += (mx - rx) * 0.12;
-  ry += (my - ry) * 0.12;
-  cursorRing.style.left = rx + 'px';
-  cursorRing.style.top  = ry + 'px';
-  requestAnimationFrame(animateCursor);
-})();
-
-// Scale ring on hover
-document.querySelectorAll('a, button, .btn, .proj-card, .skill-box, .cert-card').forEach(el => {
-  el.addEventListener('mouseenter', () => {
-    cursorRing.style.width = '56px';
-    cursorRing.style.height = '56px';
-    cursorRing.style.borderColor = 'rgba(255,34,68,1)';
-  });
-  el.addEventListener('mouseleave', () => {
-    cursorRing.style.width = '36px';
-    cursorRing.style.height = '36px';
-    cursorRing.style.borderColor = 'rgba(255,34,68,0.7)';
-  });
-});
-
-// Click ripple
-document.addEventListener('click', e => {
-  const r = document.createElement('div');
-  r.className = 'click-ripple';
-  r.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;width:30px;height:30px;`;
-  document.body.appendChild(r);
-  setTimeout(() => r.remove(), 600);
-});
-
-// ── NODE NETWORK CANVAS ──
-const canvas = document.getElementById('node-canvas');
-const ctx    = canvas.getContext('2d');
-
-let W, H;
-let scrollY = 0;
-let mouse  = {x: -9999, y: -9999};
-let target = {x: -9999, y: -9999};
-let smoothMouse = {x: -9999, y: -9999};
-
-// Config
-const COUNT        = 110;
-const CONNECT_DIST = 160;
-const MOUSE_DIST   = 260;
-const REPEL_DIST   = 100;
-const REPEL_FORCE  = 1.8;
-const TRAIL_ALPHA  = 0.18;
-const RED          = 'rgba(255,34,68,';
-const CYAN         = 'rgba(51,204,255,';
-
-function resize() {
-  W = canvas.width  = window.innerWidth;
-  H = canvas.height = window.innerHeight;
-}
-
-// Nodes with richer properties
-let nodes = [];
-function makeNodes() {
-  nodes = Array.from({length: COUNT}, (_, i) => ({
-    x:    Math.random() * W,
-    y:    Math.random() * H,
-    ox:   0, oy: 0,          // original positions for parallax
-    vx:   (Math.random() - .5) * 0.5,
-    vy:   (Math.random() - .5) * 0.5,
-    r:    Math.random() * 2.2 + 1,
-    pulse: Math.random() * Math.PI * 2, // phase for pulsing
-    pulseSpeed: 0.02 + Math.random() * 0.03,
-    color: Math.random() < 0.1 ? 'cyan' : 'red',   // 10% cyan accent nodes
-    layer: Math.random() * 0.6 + 0.7,               // parallax depth 0.7–1.3
-  }));
-}
-
-// Explosion burst on click
-function burst(cx, cy) {
-  const count = 12;
-  for (let i = 0; i < count; i++) {
-    const angle = (i / count) * Math.PI * 2;
-    const speed = 2 + Math.random() * 3;
-    nodes.push({
-      x: cx, y: cy,
-      ox: 0, oy: 0,
-      vx: Math.cos(angle) * speed,
-      vy: Math.sin(angle) * speed,
-      r: Math.random() * 2 + 1,
-      pulse: 0, pulseSpeed: 0.05,
-      color: Math.random() < 0.5 ? 'cyan' : 'red',
-      layer: 1,
-      life: 1, decay: 0.018 + Math.random() * 0.015,
-    });
-  }
-  // trim if too many
-  if (nodes.length > COUNT + 80) nodes.splice(COUNT, nodes.length - COUNT);
-}
-
-// Input tracking
-window.addEventListener('mousemove', e => {
-  mouse.x = target.x = e.clientX;
-  mouse.y = target.y = e.clientY;
-});
-window.addEventListener('touchmove', e => {
-  mouse.x = target.x = e.touches[0].clientX;
-  mouse.y = target.y = e.touches[0].clientY;
-}, {passive: true});
-window.addEventListener('click', e => {
-  burst(e.clientX, e.clientY);
-});
-window.addEventListener('touchstart', e => {
-  burst(e.touches[0].clientX, e.touches[0].clientY);
-}, {passive: true});
-window.addEventListener('resize', () => { resize(); makeNodes(); });
-window.addEventListener('scroll', () => { scrollY = window.scrollY; }, {passive:true});
-
-// Distance helper
-function dist2(ax, ay, bx, by) {
-  const dx = ax - bx, dy = ay - by;
-  return dx*dx + dy*dy;
-}
-
-// ── MAIN DRAW LOOP ──
-function draw() {
-  // Smooth mouse
-  smoothMouse.x += (target.x - smoothMouse.x) * 0.08;
-  smoothMouse.y += (target.y - smoothMouse.y) * 0.08;
-
-  // Trail / motion blur
-  ctx.fillStyle = `rgba(12,0,5,${TRAIL_ALPHA})`;
-  ctx.fillRect(0, 0, W, H);
-
-  const sm = smoothMouse;
-  const t  = Date.now() * 0.001;
-
-  // Update & cull nodes
-  for (let i = nodes.length - 1; i >= 0; i--) {
-    const n = nodes[i];
-
-    // Lifecycle for burst particles
-    if (n.life !== undefined) {
-      n.life -= n.decay;
-      if (n.life <= 0) { nodes.splice(i, 1); continue; }
-    }
-
-    // Scroll parallax offset
-    const parallaxY = -scrollY * (1 - n.layer) * 0.3;
-
-    // Mouse repulsion
-    const dmx = n.x - sm.x, dmy = n.y - sm.y;
-    const dm2 = dmx*dmx + dmy*dmy;
-    if (dm2 < REPEL_DIST * REPEL_DIST && dm2 > 0) {
-      const dm = Math.sqrt(dm2);
-      const force = (1 - dm / REPEL_DIST) * REPEL_FORCE;
-      n.vx += (dmx / dm) * force * 0.15;
-      n.vy += (dmy / dm) * force * 0.15;
-    }
-
-    // Damping & velocity
-    n.vx *= 0.985;
-    n.vy *= 0.985;
-    n.x  += n.vx;
-    n.y  += n.vy;
-
-    // Wrap edges (torus topology)
-    if (n.x < -20) n.x = W + 20;
-    else if (n.x > W + 20) n.x = -20;
-    if (n.y < -20) n.y = H + 20;
-    else if (n.y > H + 20) n.y = -20;
-
-    n.pulse += n.pulseSpeed;
-  }
-
-  // ── DRAW CONNECTIONS ──
-  for (let i = 0; i < nodes.length; i++) {
-    for (let j = i + 1; j < nodes.length; j++) {
-      const a = nodes[i], b = nodes[j];
-      const d2 = dist2(a.x, a.y, b.x, b.y);
-      if (d2 > CONNECT_DIST * CONNECT_DIST) continue;
-      const d = Math.sqrt(d2);
-      const pct = 1 - d / CONNECT_DIST;
-
-      // Check if either node is near mouse → glow line
-      const aNear = dist2(a.x, a.y, sm.x, sm.y) < MOUSE_DIST * MOUSE_DIST;
-      const bNear = dist2(b.x, b.y, sm.x, sm.y) < MOUSE_DIST * MOUSE_DIST;
-      const glow  = aNear || bNear;
-
-      if (a.color === 'cyan' || b.color === 'cyan') {
-        ctx.strokeStyle = CYAN + (pct * (glow ? 0.7 : 0.3)) + ')';
-      } else {
-        ctx.strokeStyle = RED  + (pct * (glow ? 0.8 : 0.35)) + ')';
-      }
-      ctx.lineWidth = glow ? 1.2 : 0.7;
+    // Line to cursor when near
+    if (near && mouseX > -999) {
+      var dx   = n.x - smoothX, dy = n.y - smoothY;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      var la   = (1 - dist / MOUSE_DIST) * 0.50;
+      var g = ctx.createLinearGradient(n.x, n.y, smoothX, smoothY);
+      g.addColorStop(0,    col(la));
+      g.addColorStop(0.55, col(la * 0.3));
+      g.addColorStop(1,    col(0));
+      ctx.strokeStyle = g;
+      ctx.lineWidth   = 0.7;
       ctx.beginPath();
-      ctx.moveTo(a.x, a.y);
-      ctx.lineTo(b.x, b.y);
+      ctx.moveTo(n.x, n.y);
+      ctx.lineTo(smoothX, smoothY);
       ctx.stroke();
     }
-  }
-
-  // ── LINES TO MOUSE ──
-  for (let i = 0; i < nodes.length; i++) {
-    const n = nodes[i];
-    const d2 = dist2(n.x, n.y, sm.x, sm.y);
-    if (d2 > MOUSE_DIST * MOUSE_DIST) continue;
-    const d = Math.sqrt(d2);
-    const alpha = (1 - d / MOUSE_DIST) * 0.85;
-
-    // Gradient line
-    const grad = ctx.createLinearGradient(n.x, n.y, sm.x, sm.y);
-    if (n.color === 'cyan') {
-      grad.addColorStop(0, CYAN + alpha + ')');
-      grad.addColorStop(1, RED  + alpha * 0.3 + ')');
-    } else {
-      grad.addColorStop(0, RED + alpha + ')');
-      grad.addColorStop(1, RED + '0)');
-    }
-    ctx.beginPath();
-    ctx.strokeStyle = grad;
-    ctx.lineWidth   = 1.4;
-    ctx.moveTo(n.x, n.y);
-    ctx.lineTo(sm.x, sm.y);
-    ctx.stroke();
-  }
-
-  // ── DRAW NODES ──
-  for (let i = 0; i < nodes.length; i++) {
-    const n = nodes[i];
-    const d2 = dist2(n.x, n.y, sm.x, sm.y);
-    const near = d2 < MOUSE_DIST * MOUSE_DIST;
-    const lifeFactor = n.life !== undefined ? n.life : 1;
-
-    const pulseFactor = 0.85 + 0.15 * Math.sin(n.pulse + t);
-    const baseR = n.r * pulseFactor * lifeFactor;
-    const drawR = near ? baseR * 2.2 : baseR;
-
-    const alpha = near ? 1.0 : (0.5 + 0.2 * Math.sin(n.pulse));
-
-    if (near) {
-      // Glow halo
-      const glowR = drawR * 3;
-      const glowGrad = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, glowR);
-      const col = n.color === 'cyan' ? CYAN : RED;
-      glowGrad.addColorStop(0, col + '0.4)');
-      glowGrad.addColorStop(1, col + '0)');
-      ctx.fillStyle = glowGrad;
-      ctx.beginPath();
-      ctx.arc(n.x, n.y, glowR, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    // Core dot
-    const col = n.color === 'cyan' ? CYAN : RED;
-    ctx.fillStyle = col + (alpha * lifeFactor) + ')';
-    ctx.beginPath();
-    ctx.arc(n.x, n.y, drawR, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  // ── CURSOR CROSSHAIR GLOW ──
-  if (sm.x > 0) {
-    const r = 8 + 4 * Math.sin(t * 3);
-    const g = ctx.createRadialGradient(sm.x, sm.y, 0, sm.x, sm.y, r * 5);
-    g.addColorStop(0, RED + '0.25)');
-    g.addColorStop(1, RED + '0)');
-    ctx.fillStyle = g;
-    ctx.beginPath();
-    ctx.arc(sm.x, sm.y, r * 5, 0, Math.PI * 2);
-    ctx.fill();
   }
 
   requestAnimationFrame(draw);
 }
 
 resize();
-makeNodes();
+initNodes();
 draw();
-
-// ── FADE IN (original) ──
-const io = new IntersectionObserver(
-  entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); }),
-  { threshold: 0.07 }
-);
-document.querySelectorAll('.fi').forEach(el => io.observe(el));
-
-// ── SCROLL PROGRESS BAR ──
-const progressBar = document.getElementById('scroll-progress');
-window.addEventListener('scroll', () => {
-  const st  = window.scrollY;
-  const dh  = document.documentElement.scrollHeight - window.innerHeight;
-  const pct = dh > 0 ? (st / dh) * 100 : 0;
-  progressBar.style.width = pct + '%';
-  scrollY = st;
-}, {passive: true});
-
-// ── SMOOTH SCROLL PARALLAX for sections ──
-const parallaxEls = document.querySelectorAll('.hero-name, .hero-handle, .hero-eye');
-window.addEventListener('scroll', () => {
-  const s = window.scrollY;
-  parallaxEls.forEach((el, i) => {
-    const speed = [0.18, 0.12, 0.08][i] || 0.1;
-    el.style.transform = `translateY(${s * speed}px)`;
-    el.style.opacity   = Math.max(0, 1 - s / 500);
-  });
-}, {passive: true});
-
-// ── TYPING EFFECT for console ──
-const consoleLine = document.querySelector('.console');
-if (consoleLine) {
-  const original = consoleLine.innerHTML;
-  const ps   = consoleLine.querySelector('.ps')?.outerHTML || '';
-  const text = consoleLine.textContent.replace(/lazzer@kali/,'').trim();
-  consoleLine.innerHTML = ps + ':~$ <span id="typed"></span><span class="cursor-blink">█</span>';
-  const style = document.createElement('style');
-  style.textContent = `.cursor-blink { animation: blink 1s step-end infinite; color: var(--red); }
-    @keyframes blink { 50% { opacity: 0; } }`;
-  document.head.appendChild(style);
-  const typed = document.getElementById('typed');
-  let idx = 0;
-  const chars = text;
-  function typeNext() {
-    if (idx < chars.length) {
-      typed.textContent += chars[idx++];
-      setTimeout(typeNext, 28 + Math.random() * 30);
-    }
-  }
-  setTimeout(typeNext, 800);
-}
-
-// ── COUNTER ANIMATION for stat cells ──
-function animateCount(el, end, suffix) {
-  const isFloat = end % 1 !== 0;
-  let start = 0, dur = 1400, step = 16;
-  const inc = end / (dur / step);
-  const timer = setInterval(() => {
-    start += inc;
-    if (start >= end) { start = end; clearInterval(timer); }
-    el.textContent = isFloat ? start.toFixed(2) : Math.floor(start) + suffix;
-  }, step);
-}
-
-const statObserver = new IntersectionObserver(entries => {
+// ─────────────────────────────────────────
+// RICH SCROLL ANIMATIONS
+// ─────────────────────────────────────────
+const sectionObs = new IntersectionObserver((entries) => {
   entries.forEach(e => {
     if (!e.isIntersecting) return;
-    const num = e.target;
-    const raw = num.textContent.trim();
-    const match = raw.match(/^([\d.]+)(.*)/);
-    if (match) {
-      animateCount(num, parseFloat(match[1]), match[2]);
-      statObserver.unobserve(num);
-    }
+    const label = e.target.querySelector('.label');
+    const h2    = e.target.querySelector('h2');
+    const sub   = e.target.querySelector('.section-sub');
+    if (label) label.classList.add('hdr-in');
+    if (h2)    setTimeout(() => h2.classList.add('hdr-in'), 80);
+    if (sub)   setTimeout(() => sub.classList.add('visible'), 160);
+    sectionObs.unobserve(e.target);
   });
-});
-document.querySelectorAll('.stat-num, .ctf-n, .edu-score').forEach(el => {
-  statObserver.observe(el);
+}, { threshold: 0.08, rootMargin: '-30px 0px' });
+
+document.querySelectorAll('section').forEach(s => {
+  const label = s.querySelector('.label');
+  const h2    = s.querySelector('h2');
+  if (label) label.classList.add('hdr-pre');
+  if (h2)    h2.classList.add('hdr-pre');
+  sectionObs.observe(s);
 });
 
-// ── MAGNETIC BUTTON EFFECT ──
-document.querySelectorAll('.btn').forEach(btn => {
-  btn.addEventListener('mousemove', e => {
-    const rect = btn.getBoundingClientRect();
-    const cx = rect.left + rect.width  / 2;
-    const cy = rect.top  + rect.height / 2;
-    const dx = (e.clientX - cx) * 0.3;
-    const dy = (e.clientY - cy) * 0.3;
-    btn.style.transform = `translate(${dx}px, ${dy}px)`;
-  });
-  btn.addEventListener('mouseleave', () => {
-    btn.style.transform = 'translate(0,0)';
-    btn.style.transition = 'transform 0.4s ease';
-  });
-  btn.addEventListener('mouseenter', () => {
-    btn.style.transition = 'transform 0.1s ease';
-  });
-});
+function staggerReveal(selector, delay) {
+  delay = delay || 80;
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const siblings = Array.from(entry.target.parentElement ? entry.target.parentElement.children : [entry.target])
+        .filter(el => el.matches(selector));
+      const idx = siblings.indexOf(entry.target);
+      setTimeout(() => entry.target.classList.add('visible'), idx * delay);
+      obs.unobserve(entry.target);
+    });
+  }, { threshold: 0.07, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll(selector).forEach(el => obs.observe(el));
+}
+
+staggerReveal('.proj-card',  100);
+staggerReveal('.skill-box',   70);
+staggerReveal('.lab-card',    90);
+staggerReveal('.cert-card',   75);
+staggerReveal('.blog-card',   90);
+staggerReveal('.tl-item',    110);
+staggerReveal('.edu-card',    90);
+staggerReveal('.cl',          70);
+staggerReveal('.section-sub', 60);
+
+// Parallax on hero
+const heroTitle = document.querySelector('.hero-title');
+const heroBio   = document.querySelector('.hero-bio');
+window.addEventListener('scroll', () => {
+  const sy = window.scrollY;
+  if (heroTitle) heroTitle.style.transform = 'translateY(' + (sy * 0.18) + 'px)';
+  if (heroBio)   heroBio.style.transform   = 'translateY(' + (sy * 0.10) + 'px)';
+}, { passive: true });
+
+
+
 </script>
 </body>
 </html>
-      ctx.a
